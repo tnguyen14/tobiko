@@ -4,15 +4,26 @@
  'use strict';
 
  module.exports = function(grunt) {
+ 	var fs = require('fs'),
+ 		path = require('path'),
+ 		jsYAML = require('js-yaml'),
+ 		marked = require('marked');
+
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function(){
-		var content = {},
-			data = {},
-			path = require('path');
+		var data = {},
+			files = {};
 
 		var options = this.options({
 			baseDir: 'contents',
-			config : 'config.json'
+			config : 'config.json',
+			markdown: {
+				breaks: true,
+				smartLists: true,
+				smartypants: true
+			}
 		});
+
+		console.log(options.markdown);
 
 		grunt.verbose.writeflags(options, 'Options');
 
@@ -30,16 +41,66 @@
 				var ext = path.extname(filepath),
 					basename = path.basename(filepath),
 					// remove 'contents' from path
-					newpath = path.relative(options.baseDir, filepath);
+					buildpath = path.relative(options.baseDir, filepath);
 
 					// get the JSON files
 					if (ext === '.json') {
-						content[newpath] = grunt.file.readJSON(filepath);
+						files[buildpath] = grunt.file.readJSON(filepath);
+
+					// parse markdown files
+					// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
+					} else if (ext === '.md') {
+						var fileString = grunt.file.read(filepath);
+
+						// set options for marked
+						marked.setOptions(options.markdown);
+
+						try {
+							var sections = fileString.split('---');
+							// YAML frontmatter is the part in between the 2 '---'
+							var content = jsYAML.safeLoad(sections[1]);
+
+							// get to the markdown part
+							sections.shift();
+							sections.shift();
+
+							// convert markdown data to html
+							var markdown = marked(sections.join('---'));
+							// convert new line characters to html line breaks
+							markdown = nl2br(markdown);
+
+							content['markdown'] = markdown;
+
+							files[buildpath] = content;
+
+						} catch (e) {
+							grunt.fail.fatal( e + ' .Failed to parse markdown data from ' + filepath);
+						}
 					}
 			});
-			data['data'] = content;
+			data['files'] = files;
+
+			// add global config
 			data['config'] = grunt.file.readJSON(options.config);
 			grunt.file.write(f.dest, JSON.stringify(data));
 		});
 	});
+
+	// convert new line characters to html linebreaks
+	// @param {String} str
+	// @return {String}
+
+	// inspired by nl2br function from php.js
+	// https://github.com/kvz/phpjs/blob/master/functions/strings/nl2br.js
+
+	/*
+	function nl2br (str, is_xhtml) {
+		var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br ' + '/>' : '<br>';
+
+		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
+	}
+	*/
+	function nl2br( str ) {
+	return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
+}
 };

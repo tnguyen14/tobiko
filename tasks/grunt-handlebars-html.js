@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 			// register helper with their filename as helper name
 			helpers.forEach(function(h) {
 				var ext = path.extname(h),
-					basename = path.basename(h, ext),
+					basename = path.basename(h,  ext),
 					filepath = path.resolve(options.helperDir, h);
 				Handlebars.registerHelper(basename, require(filepath));
 			});
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
 			});
 
 			// match data to templates
-			_(fileData.data).forEach(function(content, key) {
+			_(fileData.files).forEach(function(content, key) {
 				if (templates[content.template]) {
 
 					// expose env to content

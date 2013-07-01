@@ -1,5 +1,10 @@
 {{> head}}
 	<body>
+		<h1>{{title}}</h1>
+		{{#if markdown}}
+		{{{markdown}}}
+		{{/if}}
+
 		{{#isEqual env 'dev'}}
 		<script type="text/javascript" data-main="js/config.js" src="../components/requirejs/require.js"></script>
 		{{else}}

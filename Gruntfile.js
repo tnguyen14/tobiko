@@ -65,7 +65,13 @@ module.exports = function(grunt) {
 		import_contents: {
 			options : {
 				baseDir: 'contents',
-				config : 'config.json'
+				config : 'config.json',
+				markdown: {
+					breaks: true,
+					smartLists: true,
+					smartypants: true,
+					langPrefix: 'language-'
+				}
 			},
 			all: {
 				src: 'contents/**/*.{json,md}',
