@@ -1,0 +1,9 @@
+{{> head}}
+	<body>
+		{{#isEqual env 'dev'}}
+		<script type="text/javascript" data-main="js/config.js" src="../components/requirejs/require.js"></script>
+		{{else}}
+		<script type="text/javascript" src="app.js"></script>
+		{{/isEqual}}
+	</body>
+</html>

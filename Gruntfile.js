@@ -52,11 +52,11 @@ module.exports = function(grunt) {
 		},
 		handlebars_html: {
 			options : {
-				partialDir : 'app/templates/partials',
-				helperDir : 'app/templates/helpers'
+				partialDir : 'templates/partials',
+				helperDir : 'templates/helpers'
 			},
 			dev: {
-				src: 'app/templates/*.hbs',
+				src: 'templates/*.hbs',
 				dest: 'build/www',
 				data: 'build/data.json',
 			},
