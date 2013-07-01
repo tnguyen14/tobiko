@@ -45,6 +45,11 @@ Example:
 
 This could be useful as a way to order files in a directory structure. For example, files could be named as `1.md`, `2.md`, `3.md` etc. to make sure they're loaded in in order. They could then have a custom path is NOT `1.html`, `2.html` etc.
 
+#### date
+Post or page date is supported by declaring property `date` in JSON or YAML.
+Any [ISO-8601 string formats](http://momentjs.com/docs/#/parsing/string/) for date is supported.
+See [momentjs](http://momentjs.com) for more information.
+
 ### Templates
 By default this app uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
 *Note: true to a static site generator, all compiled templates need to be in `.html` formats*

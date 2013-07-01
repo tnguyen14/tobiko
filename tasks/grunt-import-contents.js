@@ -4,10 +4,10 @@
  'use strict';
 
  module.exports = function(grunt) {
- 	var fs = require('fs'),
- 		path = require('path'),
+ 	var path = require('path'),
  		jsYAML = require('js-yaml'),
- 		marked = require('marked');
+ 		marked = require('marked'),
+ 		moment = require('moment');
 
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function(){
 		var data = {},
@@ -22,8 +22,6 @@
 				smartypants: true
 			}
 		});
-
-		console.log(options.markdown);
 
 		grunt.verbose.writeflags(options, 'Options');
 
@@ -75,6 +73,17 @@
 
 						} catch (e) {
 							grunt.fail.fatal( e + ' .Failed to parse markdown data from ' + filepath);
+						}
+					}
+
+					// add support for date using moment.js http://momentjs.com/
+					if (content.date) {
+						var mDate = moment(content.date);
+						// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
+						if (mDate.isValid()) {
+							content.date = mDate;
+						} else {
+							grunt.log.writeln('The date used in ' + filepath + ' is not supported.' );
 						}
 					}
 			});
