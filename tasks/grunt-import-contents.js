@@ -10,6 +10,7 @@
 			path = require('path');
 
 		var options = this.options({
+			baseDir: 'contents',
 			config : 'config.json'
 		});
 
@@ -29,8 +30,7 @@
 				var ext = path.extname(filepath),
 					basename = path.basename(filepath),
 					// remove 'contents' from path
-					newpath = path.relative('contents', filepath);
-					grunt.log.writeln(newpath);
+					newpath = path.relative(options.baseDir, filepath);
 
 					// get the JSON files
 					if (ext === '.json') {

@@ -64,6 +64,7 @@ module.exports = function(grunt) {
 		},
 		import_contents: {
 			options : {
+				baseDir: 'contents',
 				config : 'config.json'
 			},
 			all: {
