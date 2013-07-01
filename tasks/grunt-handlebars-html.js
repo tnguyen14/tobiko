@@ -19,15 +19,31 @@ module.exports = function(grunt) {
 		});
 
 		// register helpers
-		// read helper directory and save all filenames
-		var helpers = fs.readdirSync(options.helperDir);
-		// register helper with their filename as helper name
-		helpers.forEach(function(h) {
-			var ext = path.extname(h),
-				basename = path.basename(h, ext),
-				filepath = path.resolve(options.helperDir, h);
-			Handlebars.registerHelper(basename, require(filepath));
-		})
+		if (fs.existsSync(options.helperDir)) {
+			// read helper directory and save all filenames
+			var helpers = fs.readdirSync(options.helperDir);
+			// register helper with their filename as helper name
+			helpers.forEach(function(h) {
+				var ext = path.extname(h),
+					basename = path.basename(h, ext),
+					filepath = path.resolve(options.helperDir, h);
+				Handlebars.registerHelper(basename, require(filepath));
+			});
+		}
+
+		// register partials
+		if (fs.existsSync(options.partialDir)) {
+			// read partial directory and save all filenames
+			var partials = fs.readdirSync(options.partialDir);
+			// register helper with their filename as helper name
+			partials.forEach(function(p) {
+				var ext = path.extname(p),
+					basename = path.basename(p, ext),
+					filepath = path.resolve(options.partialDir, p),
+					partial = grunt.file.read(filepath);
+				Handlebars.registerPartial(basename, partial);
+			});
+		}
 
 		this.files.forEach(function(f) {
 			var path = require('path'),
