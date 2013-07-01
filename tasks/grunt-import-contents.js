@@ -4,7 +4,8 @@
  'use strict';
 
  module.exports = function(grunt) {
- 	var path = require('path'),
+ 	var fs = require('fs'),
+ 		path = require('path'),
  		jsYAML = require('js-yaml'),
  		marked = require('marked'),
  		moment = require('moment');
@@ -77,14 +78,19 @@
 					}
 
 					// add support for date using moment.js http://momentjs.com/
-					if (content.date) {
-						var mDate = moment(content.date);
-						// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
-						if (mDate.isValid()) {
-							content.date = mDate;
-						} else {
-							grunt.log.writeln('The date used in ' + filepath + ' is not supported.' );
+					if (files[buildpath].date) {
+						// if date isn't already a moment type, convert it to momentjs
+						if (!moment.isMoment(files[buildpath].date)) {
+							var mDate = moment(files[buildpath].date);
+							// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
+							if (mDate.isValid()) {
+								files[buildpath].date = mDate;
+							} else {
+								grunt.log.writeln('The date used in ' + filepath + ' is not supported.' );
+							}
 						}
+					} else {
+						files[buildpath].date = fs.statSync(filepath).ctime;
 					}
 			});
 			data['files'] = files;
