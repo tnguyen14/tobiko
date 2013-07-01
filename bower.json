@@ -1,0 +1,10 @@
+{
+  "name": "cbtallc2",
+  "version": "0.0.0",
+  "devDependencies": {
+    "requirejs": "~2.1.6",
+    "requirejs-plugins": "~1.0.2",
+    "marked": "~0.2.9",
+    "handlebars": "~1.0.0"
+  }
+}

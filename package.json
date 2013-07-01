@@ -1,0 +1,23 @@
+{
+  "name": "cbtallc2",
+  "version": "0.0.1",
+  "author": "Tri Nguyen",
+  "respository": {
+    "type": "git",
+    "url": "git://github.com/tnguyen14/cbtallc"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-compass": "~0.3.0",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-watch": "~0.4.4",
+    "grunt-gh-pages": "~0.6.0",
+    "handlebars": "~1.0.12",
+    "matchdep": "~0.1.2",
+    "marked": "~0.2.9"
+  }
+}
