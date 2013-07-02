@@ -46,9 +46,12 @@ module.exports = function(grunt) {
 			}
 		},
 		'gh-pages': {
-			src: [
-				'build/www/**/*'
-			]
+			prod: {
+				options: {
+					base: 'build/www'
+				},
+				src: ['**/*']
+			}
 		},
 		handlebars_html: {
 			options : {
