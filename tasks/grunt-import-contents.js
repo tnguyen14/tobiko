@@ -45,6 +45,11 @@ module.exports = function (grunt) {
 						// remove 'contents' from path
 						buildpath = path.relative(options.baseDir, filepath);
 
+					// Ignore draft posts (_) and dotfiles
+					if (basename[0] === '_' || basename[0] === '.') {
+						return;
+					}
+
 					// get the JSON files
 					if (ext === '.json') {
 						files[buildpath] = grunt.file.readJSON(filepath);
