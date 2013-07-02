@@ -1,12 +1,12 @@
 require.config({
-	baseUrl: 'components',
 
-	deps: ['../js/app'],
+	baseUrl: '/',
+	deps: ['js/app'],
 
 	paths: {
-		text: 'requirejs-plugins/lib/text',
-		json: 'requirejs-plugins/src/json',
-		handlebars: 'handlebars/handlebars'
+		text: 'components/requirejs-plugins/lib/text',
+		json: 'components/requirejs-plugins/src/json',
+		handlebars: 'components/handlebars/handlebars'
 	},
 
 	// load non-amd dependencies
