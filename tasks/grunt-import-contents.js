@@ -39,71 +39,72 @@ module.exports = function (grunt) {
 					return true;
 				}
 			})
-				.forEach(function (filepath) {
-					var ext = path.extname(filepath),
-						basename = path.basename(filepath),
-						// remove 'contents' from path
-						buildpath = path.relative(options.baseDir, filepath);
+			.forEach(function (filepath) {
+				var ext = path.extname(filepath),
+					basename = path.basename(filepath),
+					// remove 'contents' from path
+					buildpath = path.relative(options.baseDir, filepath);
 
-					// Ignore draft posts (_) and dotfiles
-					if (basename[0] === '_' || basename[0] === '.') {
-						return;
+				// Ignore draft posts (_) and dotfiles
+				if (basename[0] === '_' || basename[0] === '.') {
+					return;
+				}
+
+				// get the JSON files
+				if (ext === '.json') {
+					files[buildpath] = grunt.file.readJSON(filepath);
+
+					// parse markdown files
+					// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
+				} else if (ext === '.md') {
+					var fileString = grunt.file.read(filepath);
+
+					// set options for marked
+					marked.setOptions(options.markdown);
+
+					try {
+						var sections = fileString.split('---');
+						// YAML frontmatter is the part in between the 2 '---'
+						var content = jsYAML.safeLoad(sections[1]);
+
+						// get to the markdown part
+						sections.shift();
+						sections.shift();
+
+						// convert markdown data to html
+						var markdown = marked(sections.join('---'));
+						// convert new line characters to html line breaks
+						markdown = nl2br(markdown);
+
+						content['markdown'] = markdown;
+
+						files[buildpath] = content;
+
+					} catch (e) {
+						grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
 					}
+				}
 
-					// get the JSON files
-					if (ext === '.json') {
-						files[buildpath] = grunt.file.readJSON(filepath);
-
-						// parse markdown files
-						// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
-					} else if (ext === '.md') {
-						var fileString = grunt.file.read(filepath);
-
-						// set options for marked
-						marked.setOptions(options.markdown);
-
-						try {
-							var sections = fileString.split('---');
-							// YAML frontmatter is the part in between the 2 '---'
-							var content = jsYAML.safeLoad(sections[1]);
-
-							// get to the markdown part
-							sections.shift();
-							sections.shift();
-
-							// convert markdown data to html
-							var markdown = marked(sections.join('---'));
-							// convert new line characters to html line breaks
-							markdown = nl2br(markdown);
-
-							content['markdown'] = markdown;
-
-							files[buildpath] = content;
-
-						} catch (e) {
-							grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
+				// add support for date using moment.js http://momentjs.com/
+				if (files[buildpath].date) {
+					// if date isn't already a moment type, convert it to momentjs
+					if (!moment.isMoment(files[buildpath].date)) {
+						var mDate = moment(files[buildpath].date);
+						// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
+						if (mDate.isValid()) {
+							files[buildpath].date = mDate;
+						} else {
+							grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
 						}
 					}
+				} else {
+					files[buildpath].date = fs.statSync(filepath).ctime;
+				}
 
-					// add support for date using moment.js http://momentjs.com/
-					if (files[buildpath].date) {
-						// if date isn't already a moment type, convert it to momentjs
-						if (!moment.isMoment(files[buildpath].date)) {
-							var mDate = moment(files[buildpath].date);
-							// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
-							if (mDate.isValid()) {
-								files[buildpath].date = mDate;
-							} else {
-								grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
-							}
-						}
-					} else {
-						files[buildpath].date = fs.statSync(filepath).ctime;
-					}
+				// add global config
+				files[buildpath]['config'] = config;
+			});
 
-					// add global config
-					files[buildpath]['config'] = config;
-				});
 			data['files'] = files;
 
 			grunt.file.write(f.dest, JSON.stringify(data));
