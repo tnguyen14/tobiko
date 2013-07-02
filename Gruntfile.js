@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 		config: grunt.file.readJSON('config.json'),
 		compass: {
 			options: {
-				cssDir: 'build/www',
+				cssDir: 'build/www/css',
 				sassDir: 'sass'
 			},
 			dev: {
