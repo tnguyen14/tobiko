@@ -1,22 +1,22 @@
 /* get all data contents
  * store them as a humongous JSON file
  */
- 'use strict';
+'use strict';
 
- module.exports = function(grunt) {
- 	var fs = require('fs'),
- 		path = require('path'),
- 		jsYAML = require('js-yaml'),
- 		marked = require('marked'),
- 		moment = require('moment');
+module.exports = function (grunt) {
+	var fs = require('fs'),
+		path = require('path'),
+		jsYAML = require('js-yaml'),
+		marked = require('marked'),
+		moment = require('moment');
 
-	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function(){
+	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var data = {},
 			files = {};
 
 		var options = this.options({
 			baseDir: 'contents',
-			config : 'config.json',
+			config: 'config.json',
 			markdown: {
 				breaks: true,
 				smartLists: true,
@@ -29,8 +29,8 @@
 
 		grunt.verbose.writeflags(options, 'Options');
 
-		this.files.forEach(function(f) {
-			f.src.filter(function(filepath){
+		this.files.forEach(function (f) {
+			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
 				if (!grunt.file.exists(filepath)) {
 					grunt.log.warn('Source file "' + filepath + '" not found.');
@@ -39,18 +39,18 @@
 					return true;
 				}
 			})
-			.forEach(function(filepath) {
-				var ext = path.extname(filepath),
-					basename = path.basename(filepath),
-					// remove 'contents' from path
-					buildpath = path.relative(options.baseDir, filepath);
+				.forEach(function (filepath) {
+					var ext = path.extname(filepath),
+						basename = path.basename(filepath),
+						// remove 'contents' from path
+						buildpath = path.relative(options.baseDir, filepath);
 
 					// get the JSON files
 					if (ext === '.json') {
 						files[buildpath] = grunt.file.readJSON(filepath);
 
-					// parse markdown files
-					// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
+						// parse markdown files
+						// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
 					} else if (ext === '.md') {
 						var fileString = grunt.file.read(filepath);
 
@@ -76,7 +76,7 @@
 							files[buildpath] = content;
 
 						} catch (e) {
-							grunt.fail.fatal( e + ' .Failed to parse markdown data from ' + filepath);
+							grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
 						}
 					}
 
@@ -89,7 +89,7 @@
 							if (mDate.isValid()) {
 								files[buildpath].date = mDate;
 							} else {
-								grunt.log.writeln('The date used in ' + filepath + ' is not supported.' );
+								grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
 							}
 						}
 					} else {
@@ -98,7 +98,7 @@
 
 					// add global config
 					files[buildpath]['config'] = config;
-			});
+				});
 			data['files'] = files;
 
 			grunt.file.write(f.dest, JSON.stringify(data));
@@ -119,7 +119,8 @@
 		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 	}
 	*/
-	function nl2br( str ) {
-	return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
-}
+
+	function nl2br(str) {
+		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
+	}
 };

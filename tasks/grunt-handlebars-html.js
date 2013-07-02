@@ -4,13 +4,13 @@
 
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 	var config = grunt.file.readJSON('./config.json');
 	var fs = require('fs'),
 		path = require('path'),
 		Handlebars = require('handlebars');
 
-	grunt.registerMultiTask('handlebars_html', 'write templates to html', function(){
+	grunt.registerMultiTask('handlebars_html', 'write templates to html', function () {
 		var _ = grunt.util._;
 
 		var options = this.options({
@@ -23,9 +23,9 @@ module.exports = function(grunt) {
 			// read helper directory and save all filenames
 			var helpers = fs.readdirSync(options.helperDir);
 			// register helper with their filename as helper name
-			helpers.forEach(function(h) {
+			helpers.forEach(function (h) {
 				var ext = path.extname(h),
-					basename = path.basename(h,  ext),
+					basename = path.basename(h, ext),
 					filepath = path.resolve(options.helperDir, h);
 				Handlebars.registerHelper(basename, require(filepath));
 			});
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
 			// read partial directory and save all filenames
 			var partials = fs.readdirSync(options.partialDir);
 			// register helper with their filename as helper name
-			partials.forEach(function(p) {
+			partials.forEach(function (p) {
 				var ext = path.extname(p),
 					basename = path.basename(p, ext),
 					filepath = path.resolve(options.partialDir, p),
@@ -45,13 +45,13 @@ module.exports = function(grunt) {
 			});
 		}
 
-		this.files.forEach(function(f) {
+		this.files.forEach(function (f) {
 			var path = require('path'),
 				templates = {},
 				env = grunt.task.current.target,
 				fileData = grunt.file.readJSON(f.data);
 			// filter out files that doesn't exist
-			f.src.filter(function(filepath) {
+			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
 				if (!grunt.file.exists(filepath)) {
 					grunt.log.warn('Source file "' + filepath + '" not found.');
@@ -60,15 +60,15 @@ module.exports = function(grunt) {
 					return true;
 				}
 			})
-			.forEach(function(filepath) {
-				var basename = path.basename(filepath),
-					src = grunt.file.read(filepath);
+				.forEach(function (filepath) {
+					var basename = path.basename(filepath),
+						src = grunt.file.read(filepath);
 
-				templates[basename] = Handlebars.compile(src);
-			});
+					templates[basename] = Handlebars.compile(src);
+				});
 
 			// match data to templates
-			_(fileData.files).forEach(function(content, key) {
+			_(fileData.files).forEach(function (content, key) {
 				if (templates[content.template]) {
 
 					// expose env to content
@@ -92,11 +92,12 @@ module.exports = function(grunt) {
 					// write the compiled html to file
 					var outputFile = f.dest + '/' + dirname + basename + '.html';
 					grunt.file.write(outputFile, html);
-					grunt.log.writeln( '"' + outputFile + '" was created.');
+					grunt.log.writeln('"' + outputFile + '" was created.');
 				} else {
 					grunt.log.writeln('Could not find the specified template for ' + key);
 				}
 			});
 		});
 	});
+
 };
