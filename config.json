@@ -1,4 +1,5 @@
 {
 	"name": "Static Site FTW",
-	"url": "localhost"
+	"url": "localhost",
+	"livereload": 35729
 }

@@ -47,7 +47,19 @@ module.exports = function(grunt) {
 		},
 		watch: {
 			options: {
-				livereload: '<%= config.livereload || 35729 %>'
+				livereload: '<%= config.livereload %>' || 35729
+			},
+			css: {
+				files: ['sass/**/*.scss'],
+				tasks: ['compass:dev']
+			},
+			contents: {
+				files: ['contents/**/*.{json,md}'],
+				tasks: ['import_contents']
+			},
+			templates: {
+				files: ['templates/**/*.{hbs,html}'],
+				tasks: ['handlebars_html:dev']
 			}
 		},
 		handlebars_html: {
@@ -89,15 +101,22 @@ module.exports = function(grunt) {
 	grunt.loadTasks('tasks');
 
 	grunt.registerTask('dev', [
-		'import_contents', 'handlebars_html:dev', 'compass:dev', 'connect:dev', 'watch'
+		'import_contents',
+		'handlebars_html:dev',
+		'compass:dev',
+		'connect:dev',
+		'watch'
 	]);
 
 	grunt.registerTask('build', [
-		'import_contents', 'handlebars_html:prod', 'compass:prod'
+		'import_contents',
+		'handlebars_html:prod',
+		'compass:prod'
 	]);
 
 	grunt.registerTask('deploy', 'Deploy site via gh-pages.', [
-		'build', 'gh-pages'
+		'build',
+		'gh-pages'
 	])
 
 	grunt.registerTask('prod', [

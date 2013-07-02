@@ -24,6 +24,9 @@
 			}
 		});
 
+		// global config
+		var config = grunt.file.readJSON(options.config)
+
 		grunt.verbose.writeflags(options, 'Options');
 
 		this.files.forEach(function(f) {
@@ -92,11 +95,12 @@
 					} else {
 						files[buildpath].date = fs.statSync(filepath).ctime;
 					}
+
+					// add global config
+					files[buildpath]['config'] = config;
 			});
 			data['files'] = files;
 
-			// add global config
-			data['config'] = grunt.file.readJSON(options.config);
 			grunt.file.write(f.dest, JSON.stringify(data));
 		});
 	});

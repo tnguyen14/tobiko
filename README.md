@@ -48,7 +48,9 @@ This could be useful as a way to order files in a directory structure. For examp
 #### date
 Post or page date is supported by declaring property `date` in JSON or YAML. Any [ISO-8601 string formats](http://momentjs.com/docs/#/parsing/string/) for date is supported.
 
-By default, a file without a `date` specified will have the `date` value of when the file was created. (To be more exact, it will have the [`ctime`](http://en.wikipedia.org/wiki/Atime_(Unix)#ctime) value when `grunt` is first run).
+By default, a file without a `date` specified will have the `date` value of when the file was created. (To be more exact, it will have the [`ctime`][1] value when `grunt` is first run).
+
+[1]: http://en.wikipedia.org/wiki/Atime_(Unix)#ctime
 
 See [momentjs](http://momentjs.com) for more information about the date format.
 

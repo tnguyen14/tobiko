@@ -10,9 +10,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque pena
 
 Nulla vitae elit libero, a pharetra augue. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec ullamcorper nulla non metus auctor fringilla.
 
-what is this
-a new line?
-
 ```js
 var foo = bar
 ```
