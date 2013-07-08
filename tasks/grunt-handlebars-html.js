@@ -49,7 +49,7 @@ module.exports = function (grunt) {
 			var path = require('path'),
 				templates = {},
 				env = grunt.task.current.target,
-				fileData = grunt.file.readJSON(f.data);
+				dataFile = grunt.file.readJSON(f.data);
 			// filter out files that doesn't exist
 			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
@@ -68,36 +68,53 @@ module.exports = function (grunt) {
 				});
 
 			// match data to templates
-			_(fileData.files).forEach(function (content, key) {
-				// do not compile those without a template
-				if (templates[content.template]) {
+			var renderContent = function(content) {
+				_(content).forEach(function (content, key, collections) {
+					// if the file has a template property -> render it
+					if (content.template) {
+						if (templates[content.template]) {
+							// expose env and config to content
+							content.env = env;
+							content.config = config;
 
-					// expose env to content
-					content['env'] = env;
-					var html = templates[content.template](content);
+							// pass in the whole collections to make other sibling contents available
+							collections.content = content;
+							var html = templates[content.template](collections);
 
-					// if a filepath is explicitly specified, use that instead
-					// otherwise, use the directory and file structure as path
-					var filepath = (content.filepath) ? content.filepath : key;
-					var ext = path.extname(filepath),
-						dirname = path.dirname(filepath),
-						basename = path.basename(filepath, ext);
+							// if a filepath is explicitly specified, use that instead
+							// otherwise, use the directory and file structure as path
+							var filepath = (content.filepath) ? content.filepath : key;
+							var ext = path.extname(filepath),
+								dirname = path.dirname(filepath),
+								basename = path.basename(filepath, ext);
 
-					// remove the dot in dirname, add the trailing slash where appropriate
-					if (dirname === '.') {
-						dirname = '';
+							// remove the dot in dirname, add the trailing slash where appropriate
+							if (dirname === '.') {
+								dirname = '';
+							} else {
+								dirname = dirname + '/';
+							}
+
+							// write the compiled html to file
+							var outputFile = f.dest + '/' + dirname + basename + '.html';
+							grunt.file.write(outputFile, html);
+							grunt.log.writeln('"' + outputFile + '" was created.');
+						} else {
+							grunt.log.writeln('Could not find template ' + content.template + ' for ' + key);
+						}
 					} else {
-						dirname = dirname + '/';
+						// Keep going deeper into the content tree if there is more
+						if (_.isObject(content)) {
+							renderContent(content);
+						} else {
+							return;
+						}
 					}
+				});
+			};
 
-					// write the compiled html to file
-					var outputFile = f.dest + '/' + dirname + basename + '.html';
-					grunt.file.write(outputFile, html);
-					grunt.log.writeln('"' + outputFile + '" was created.');
-				} else {
-					grunt.log.writeln('Could not find the specified template for ' + key);
-				}
-			});
+			renderContent(dataFile.contents);
+
 		});
 	});
 
