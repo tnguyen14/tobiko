@@ -69,6 +69,7 @@ module.exports = function (grunt) {
 
 			// match data to templates
 			_(fileData.files).forEach(function (content, key) {
+				// do not compile those without a template
 				if (templates[content.template]) {
 
 					// expose env to content

@@ -43,7 +43,7 @@ Example:
 }
 ```
 
-This could be useful as a way to order files in a directory structure. For example, files could be named as `1.md`, `2.md`, `3.md` etc. to make sure they're loaded in in order. They could then have a custom path is NOT `1.html`, `2.html` etc.
+This could be useful as a way to order files in a directory structure. For example, files could be named as `1.md`, `2.md`, `3.md` etc. to make sure they're loaded in in order. They could then have a custom path that is *not* `1.html`, `2.html`, '3.html' etc.
 
 #### date
 Post or page date is supported by declaring property `date` in JSON or YAML. Any [ISO-8601 string formats](http://momentjs.com/docs/#/parsing/string/) for date is supported.

@@ -10,10 +10,96 @@ module.exports = function (grunt) {
 		marked = require('marked'),
 		moment = require('moment');
 
-	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
-		var data = {},
-			files = {};
 
+	/* convert new line characters to html linebreaks
+	 * inspired by nl2br function from php.js
+	 * https://github.com/kvz/phpjs/blob/master/functions/strings/nl2br.js
+	 * @param {String} str
+	 * @return {String}
+	*/
+	var nl2br = function(str) {
+		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
+	}
+
+	// parse JSON and markdown content
+	var parseContent = function(filepath) {
+		var ext = path.extname(filepath),
+			basename = path.basename(filepath),
+			// remove 'contents' from path
+			content;
+
+		// Ignore draft posts (_) and dotfiles
+		if (basename[0] === '_' || basename[0] === '.') {
+			return;
+		}
+
+		// get the JSON files
+		if (ext === '.json') {
+			content = grunt.file.readJSON(filepath);
+
+			// parse markdown files
+			// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
+		} else if (ext === '.md') {
+			var fileContent = grunt.file.read(filepath);
+
+			// set options for marked
+			marked.setOptions(options.markdown);
+
+			try {
+				var sections = fileContent.split('---');
+				// YAML frontmatter is the part in between the 2 '---'
+				content = jsYAML.safeLoad(sections[1]);
+
+				// get to the markdown part
+				sections.shift();
+				sections.shift();
+
+				// convert markdown data to html
+				var markdown = marked(sections.join('---'));
+				// convert new line characters to html line breaks
+				markdown = nl2br(markdown);
+
+				content['markdown'] = markdown;
+
+			} catch (e) {
+				grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
+			}
+		}
+
+		// add support for date using moment.js http://momentjs.com/
+		if (content) {
+			if(!content.date) {
+				content.date = fs.statSync(filepath).ctime;
+			}
+			// if date isn't already a moment type, convert it to momentjs
+			if (!moment.isMoment(content.date)) {
+				var mDate = moment(content.date);
+				// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
+				if (mDate.isValid()) {
+					content.date = mDate;
+				} else {
+					grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
+				}
+			}
+		}
+		return content;
+	};
+
+	// inspired from grunt.file.recurse function https://github.com/gruntjs/grunt/blob/master/lib/grunt/file.js
+	var getDataRecurse = function(rootdir, data, subdir) {
+		var abspath = subdir ? path.join(rootdir, subdir) : rootdir;
+		fs.readdirSync(abspath).forEach(function(filename){
+			var filepath = path.join(abspath, filename);
+			if (fs.statSync(filepath).isDirectory()) {
+				data[filename] = {};
+				getDataRecurse(rootdir, data[filename], path.join(subdir || '', filename || ''));
+			} else {
+				data[filename] = parseContent(filepath);
+			}
+		});
+	};
+
+	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var options = this.options({
 			baseDir: 'contents',
 			config: 'config.json',
@@ -29,6 +115,8 @@ module.exports = function (grunt) {
 
 		grunt.verbose.writeflags(options, 'Options');
 
+		// Content Tree
+		var contentTree = {};
 		this.files.forEach(function (f) {
 			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
@@ -40,93 +128,30 @@ module.exports = function (grunt) {
 				}
 			})
 			.forEach(function (filepath) {
-				var ext = path.extname(filepath),
+				var dirname = path.dirname(filepath),
+					directories = dirname.split(path.sep),
 					basename = path.basename(filepath),
-					// remove 'contents' from path
-					buildpath = path.relative(options.baseDir, filepath);
+					content = parseContent(filepath);
 
-				// Ignore draft posts (_) and dotfiles
-				if (basename[0] === '_' || basename[0] === '.') {
-					return;
-				}
+				// start at the top of the content tree
+				var currentDir = contentTree;
 
-				// get the JSON files
-				if (ext === '.json') {
-					files[buildpath] = grunt.file.readJSON(filepath);
-
-					// parse markdown files
-					// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
-				} else if (ext === '.md') {
-					var fileString = grunt.file.read(filepath);
-
-					// set options for marked
-					marked.setOptions(options.markdown);
-
-					try {
-						var sections = fileString.split('---');
-						// YAML frontmatter is the part in between the 2 '---'
-						var content = jsYAML.safeLoad(sections[1]);
-
-						// get to the markdown part
-						sections.shift();
-						sections.shift();
-
-						// convert markdown data to html
-						var markdown = marked(sections.join('---'));
-						// convert new line characters to html line breaks
-						markdown = nl2br(markdown);
-
-						content['markdown'] = markdown;
-
-						files[buildpath] = content;
-
-					} catch (e) {
-						grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
+				// iterate through the directory path
+				for (var obj in directories) {
+					// if the directory doesn't exist yet, create an empty object in the content tree
+					if (!currentDir[directories[obj]]) {
+						currentDir = currentDir[directories[obj]] = {};
+					// if the directory already exists, move into a deeper level
+					} else {
+						currentDir = currentDir[directories[obj]];
 					}
 				}
+				// once the deepest directory level is reached, put new content on the Content Tree
+				currentDir[basename] = content;
 
-				// add support for date using moment.js http://momentjs.com/
-				if (files[buildpath].date) {
-					// if date isn't already a moment type, convert it to momentjs
-					if (!moment.isMoment(files[buildpath].date)) {
-						var mDate = moment(files[buildpath].date);
-						// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
-						if (mDate.isValid()) {
-							files[buildpath].date = mDate;
-						} else {
-							grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
-						}
-					}
-				} else {
-					files[buildpath].date = fs.statSync(filepath).ctime;
-				}
-
-				// add global config
-				files[buildpath]['config'] = config;
 			});
 
-			data['files'] = files;
-
-			grunt.file.write(f.dest, JSON.stringify(data));
+			grunt.file.write(f.dest, JSON.stringify(contentTree));
 		});
 	});
-
-	// convert new line characters to html linebreaks
-	// @param {String} str
-	// @return {String}
-
-	// inspired by nl2br function from php.js
-	// https://github.com/kvz/phpjs/blob/master/functions/strings/nl2br.js
-
-	/*
-	function nl2br (str, is_xhtml) {
-		var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br ' + '/>' : '<br>';
-
-		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
-	}
-	*/
-
-	function nl2br(str) {
-		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
-	}
 };
