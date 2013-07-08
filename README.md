@@ -10,17 +10,50 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
 3. Run `bower install`
 4. Use `grunt` on the command line to generate preview, build and deploy your website.
 
+### config.json
+High level, site-wide configurations can be specified in `config.json`.
+
 ### Contents
 By default, the site contents will be in the `contents` folder. This option could be changed in `Gruntfile.js`, under `import_contents` task.
 
 Content can be written in `json` and `markdown` with `yaml` [frontmatter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter).
 
-The structure of the base directory will be reflected in the final static directory.
+All contents are written to `data.json` in the `build` directory.
+The structure of the `contents` directory will be reflected in the final static directory.
 
-#### config.json
-High level, site-wide configurations can be specified in [`config.json`](https://github.com/tnguyen14/tobiko/blob/master/config.json).
+#### Nesting
+In any directory, a file's sibling files and directories are available in the template to access. This is a convenient and structural way to store and organize data, instead of dumping everything into a JSON file.
 
-All contents, including `config.json`, are stored in `data.json` in the `build` directory.
+For example, for this file structure
+```
+contents
+├── index.json
+└── cars
+    ├── 1.tesla.json
+    ├── 2.ford.json
+    ├── 3.volve.json
+    ├── 4.honda.json
+    ├── 5.toyota.json
+    └── accessories
+        └── spoiler.json
+```
+
+If you're writing the template for `index.json`, its own content is available through the `content` variable.
+```html
+  <h1>{{content.title}}</h1>
+```
+And `cars` are also available as
+```html
+  <ul>
+  {{#each cars}}
+  	<li><h2>{{title}}</h2></li>
+  {{/each}}
+  </ul>
+
+  <div class="spoiler">
+   {{cars.accessories["spoiler.json"]}}
+  </div>
+```
 
 #### template
 Each page specifies a template that it uses, either as a JSON property or YAML frontmmatter.
@@ -31,6 +64,9 @@ Example:
 	template: "index.hbs"
 }
 ```
+
+If a file doesn't specify a template, its data is available to be used in the ContentTree but will not be rendered.
+
 #### filepath
 By default, the path of the page is its directory structure.
 For example, the page `contents/articles/06/a-new-day.json` will have the URL `http://localhost/articles/06/a-new-day.json`.
@@ -43,7 +79,22 @@ Example:
 }
 ```
 
-This could be useful as a way to order files in a directory structure. For example, files could be named as `1.md`, `2.md`, `3.md` etc. to make sure they're loaded in in order. They could then have a custom path that is *not* `1.html`, `2.html`, '3.html' etc.
+This could be useful as a way to order files in a directory structure.
+In the cars example above:
+```
+contents
+├── index.json
+└── cars
+    ├── 1.tesla.json
+    ├── 2.ford.json
+    ├── 3.volve.json
+    ├── 4.honda.json
+    ├── 5.toyota.json
+    └── accessories
+        └── spoiler.json
+```
+
+In order to avoid the number 1, 2, 3 etc. appear in these car's URL, they could have a custom `filepath` property, such as `contents/cars/tesla.json`.
 
 #### date
 Post or page date is supported by declaring property `date` in JSON or YAML. Any [ISO-8601 string formats](http://momentjs.com/docs/#/parsing/string/) for date is supported.
@@ -60,7 +111,13 @@ By default this app uses [Handlebars](http://handlebarsjs.com) as its templating
 
 Helpers and Partials are supported. They can be stored under `helpers` and `partials` directories under `templates`. These directory names of course can be changed in `Gruntfile.js`.
 
-Each page needs to specify its own template. This can be done with a JSON property `template: index.hbs` or in the YAML frontmatter.
+Each page needs to specify its own template. This can be done with a JSON property
+```js
+  `template: index.hbs`
+```
+or in the YAML frontmatter. A file with no `'template'` property will not be rendered.
+
+A file's content is available in the template under the `content` variable.
 
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
