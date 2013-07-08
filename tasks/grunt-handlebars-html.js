@@ -49,7 +49,7 @@ module.exports = function (grunt) {
 			var path = require('path'),
 				templates = {},
 				env = grunt.task.current.target,
-				dataFile = grunt.file.readJSON(f.data);
+				data = grunt.file.readJSON(f.data);
 			// filter out files that doesn't exist
 			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
@@ -60,14 +60,14 @@ module.exports = function (grunt) {
 					return true;
 				}
 			})
-				.forEach(function (filepath) {
-					var basename = path.basename(filepath),
-						src = grunt.file.read(filepath);
+			.forEach(function (filepath) {
+				var basename = path.basename(filepath),
+					src = grunt.file.read(filepath);
 
-					templates[basename] = Handlebars.compile(src);
-				});
+				templates[basename] = Handlebars.compile(src);
+			});
 
-			// match data to templates
+			// recursively go through content and display the ones with a template
 			var renderContent = function(content) {
 				_(content).forEach(function (content, key, collections) {
 					// if the file has a template property -> render it
@@ -91,14 +91,12 @@ module.exports = function (grunt) {
 							// remove the dot in dirname, add the trailing slash where appropriate
 							if (dirname === '.') {
 								dirname = '';
-							} else {
-								dirname = dirname + '/';
 							}
 
 							// write the compiled html to file
-							var outputFile = f.dest + '/' + dirname + basename + '.html';
-							grunt.file.write(outputFile, html);
-							grunt.log.writeln('"' + outputFile + '" was created.');
+							var outPath = path.join(f.dest, dirname, basename + '.html');
+							grunt.file.write(outPath, html);
+							grunt.log.writeln('"' + outPath + '" was created.');
 						} else {
 							grunt.log.writeln('Could not find template ' + content.template + ' for ' + key);
 						}
@@ -113,7 +111,7 @@ module.exports = function (grunt) {
 				});
 			};
 
-			renderContent(dataFile.contents);
+			renderContent(data.contents);
 
 		});
 	});
