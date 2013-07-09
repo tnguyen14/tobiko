@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 		config: grunt.file.readJSON('config.json'),
 		compass: {
 			options: {
-				cssDir: 'build/www/css',
+				cssDir: '<%= config.buildPath %>/css',
 				sassDir: 'sass'
 			},
 			dev: {
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
 					middleware: function(connect, options) {
 						return [
 							// serve files in /dist as if they were in the root.
-							connect.static(__dirname + '/build/www'),
+							connect.static(__dirname + '/<%= config.buildPath %>'),
 							// but serve everything else from the root
 							connect.static(__dirname)
 						];
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 			},
 			prod: {
 				options: {
-					base: 'build/www',
+					base: '<%= config.buildPath %>',
 					keepalive: true,
 				}
 			}
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
 		'gh-pages': {
 			prod: {
 				options: {
-					base: 'build/www'
+					base: '<%= config.buildPath %>'
 				},
 				src: ['**/*']
 			}
@@ -67,7 +67,7 @@ module.exports = function(grunt) {
 			},
 			dev: {
 				src: 'templates/*.hbs',
-				dest: 'build/www',
+				dest: '<%= config.buildPath %>',
 				data: 'build/data.json',
 			},
 			prod: '<%= handlebars_html.dev %>'
@@ -94,7 +94,7 @@ module.exports = function(grunt) {
 					baseUrl: '.',
 					mainConfigFile: 'js/config.js',
 					name: 'js/app',
-					out: 'build/www/app.js',
+					out: '<%= config.buildPath %>/app.js',
 					optimize: 'uglify2',
 					generateSourceMaps: true,
 					preserveLicenseComments: false,
@@ -102,7 +102,7 @@ module.exports = function(grunt) {
 			}
 		},
 		fix_sourcemaps: {
-			prod: ['build/www/app.js.map']
+			prod: ['<%= config.buildPath %>/app.js.map']
 		},
 		watch: {
 			options: {

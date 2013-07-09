@@ -1,5 +1,6 @@
 {
 	"name": "Static Site FTW",
 	"url": "localhost",
-	"livereload": 35729
+	"livereload": 35729,
+	"buildPath": "build/www"
 }
