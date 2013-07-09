@@ -45,6 +45,13 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+		copy: {
+			build: {
+				files: [
+					{expand: true, cwd: 'contents/', src: '**/*.{jpg,png}', dest: '<%= config.buildPath %>/'}
+				]
+			}
+		},
 		'gh-pages': {
 			prod: {
 				options: {
@@ -139,6 +146,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('dev', [
 		'import_contents',
+		'copy',
 		'handlebars_html:dev',
 		'compass:dev',
 		'connect:dev',
@@ -147,6 +155,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('build', [
 		'import_contents',
+		'copy',
 		'handlebars_html:prod',
 		'compass:prod',
 		'requirejs:prod',
