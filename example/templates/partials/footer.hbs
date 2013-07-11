@@ -1,6 +1,6 @@
-		{{#isEqual env 'dev'}}
+		{{#isEqual content.env 'dev'}}
 		<script type="text/javascript" data-main="js/config.js" src="../components/requirejs/require.js"></script>
-		<script src="http://localhost:{{config.livereload}}/livereload.js"></script>
+		<script src="http://localhost:{{content.config.livereload}}/livereload.js"></script>
 		{{else}}
 		<script type="text/javascript" src="app.js"></script>
 		{{/isEqual}}
