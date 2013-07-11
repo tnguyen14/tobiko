@@ -14,5 +14,8 @@ require.config({
 		handlebars: {
 			exports: 'Handlebars'
 		}
-	}
+	},
+
+	// Remove these modules from the final build
+	stubModules: ['text', 'json']
 });

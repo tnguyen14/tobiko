@@ -93,7 +93,8 @@ module.exports = function(grunt) {
 				options: {
 					baseUrl: '.',
 					mainConfigFile: 'js/config.js',
-					name: 'js/app',
+					name: 'components/almond/almond',
+					insertRequire: ['js/app'],
 					out: '<%= config.buildPath %>/app.js',
 					optimize: 'uglify2',
 					generateSourceMaps: true,
