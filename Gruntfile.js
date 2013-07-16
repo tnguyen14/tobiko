@@ -48,7 +48,8 @@ module.exports = function(grunt) {
 		copy: {
 			build: {
 				files: [
-					{expand: true, cwd: 'contents/', src: '**/*.{jpg,png}', dest: '<%= config.buildPath %>/'}
+					{expand: true, cwd: 'contents/', src: '**/*.{jpg,png}', dest: '<%= config.buildPath %>/'},
+					{expand: true, cwd: 'sass', src: 'assets/**/*.{jpg,png,gif}', dest: '<%= config.buildPath %>/css/'}
 				]
 			}
 		},
@@ -99,6 +100,25 @@ module.exports = function(grunt) {
 					optimize: 'uglify2',
 					generateSourceMaps: true,
 					preserveLicenseComments: false,
+				}
+			}
+		},
+		sass: {
+			dev: {
+				options: {
+					style: 'expanded',
+					sourcemap: true
+				},
+				files: {
+					'<%= config.buildPath %>/css/main.css': 'sass/main.scss'
+				}
+			},
+			prod: {
+				options: {
+					style: 'compressed'
+				},
+				files: {
+					'<%= config.buildPath %>/css/main.css': 'sass/main.scss'
 				}
 			}
 		},
@@ -168,7 +188,7 @@ module.exports = function(grunt) {
 		'import_contents',
 		'copy',
 		'handlebars_html:dev',
-		'compass:dev',
+		'sass:dev',
 		'connect:dev',
 		'watch'
 	]);
@@ -177,7 +197,7 @@ module.exports = function(grunt) {
 		'import_contents',
 		'copy',
 		'handlebars_html:prod',
-		'compass:prod',
+		'sass:prod',
 		'requirejs:prod',
 		'fix_sourcemaps:prod'
 	]);
