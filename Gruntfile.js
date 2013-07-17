@@ -56,7 +56,9 @@ module.exports = function(grunt) {
 		'gh-pages': {
 			prod: {
 				options: {
-					base: '<%= config.buildPath %>'
+					base: '<%= config.buildPath %>',
+					branch: master,
+					remote: 'gh-pages'
 				},
 				src: ['**/*']
 			}
