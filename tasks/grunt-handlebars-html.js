@@ -5,14 +5,18 @@
 'use strict';
 
 module.exports = function (grunt) {
-	var config = grunt.file.readJSON('./config.json');
+	var _ = grunt.util._;
+	var config = grunt.file.readJSON('./config.json'),
+		config_dev = (grunt.file.exists('./config-dev.json')) ? grunt.file.readJSON('./config-dev.json') : {};
+
+		// config_dev will overwrite config
+		config_dev = _.extend(config, config_dev);
+
 	var fs = require('fs'),
 		path = require('path'),
 		Handlebars = require('handlebars');
 
 	grunt.registerMultiTask('handlebars_html', 'write templates to html', function () {
-		var _ = grunt.util._;
-
 		var options = this.options({
 			partialDir: 'app/templates/partials',
 			helperDir: 'app/templates/helpers'
@@ -75,14 +79,15 @@ module.exports = function (grunt) {
 						if (templates[content.template]) {
 							// expose env and config to content
 							content.env = env;
-							content.config = config;
+							// use config_dev if in dev environment
+							content.config = (env === 'dev') ? config_dev : config;
 
 							// pass in the whole collections to make other sibling contents available
 							collections.content = content;
 							var html = templates[content.template](collections);
 
-							// if a filepath is explicitly specified, use that instead
-							// otherwise, use the directory and file structure as path
+							// if a filepath is specified, use that instead (it should be after contents are imported)
+							// otherwise, use filename as path
 							var filepath = (content.filepath) ? content.filepath : key;
 							var ext = path.extname(filepath),
 								dirname = path.dirname(filepath),
@@ -103,6 +108,8 @@ module.exports = function (grunt) {
 					} else {
 						// Keep going deeper into the content tree if there is more
 						if (_.isObject(content)) {
+							grunt.log.writeln('Directory "' + key + '" was created.');
+
 							renderContent(content);
 						} else {
 							return;
