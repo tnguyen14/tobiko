@@ -133,7 +133,15 @@ module.exports = function (grunt) {
 				var dirname = path.dirname(filepath),
 					directories = dirname.split(path.sep),
 					basename = path.basename(filepath),
-					content = parseContent(filepath, options);
+					relpath = path.relative(options.baseDir, filepath),
+					content = {};
+
+				content = parseContent(filepath, options);
+
+				// add filepath property if not specified
+				if (!content.filepath) {
+					content.filepath = relpath;
+				}
 
 				// start at the top of the content tree
 				var currentDir = contentTree;
@@ -153,7 +161,7 @@ module.exports = function (grunt) {
 
 			});
 
-			grunt.file.write(f.dest, JSON.stringify(contentTree));
+			grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
 		});
 	});
 };
