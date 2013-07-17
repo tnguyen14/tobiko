@@ -140,6 +140,14 @@ module.exports = function(grunt) {
 			templates: {
 				files: ['templates/**/*.{hbs,html}'],
 				tasks: ['handlebars_html:dev']
+			},
+			images: {
+				files: ['contents/**/*.{jpg,png}', 'sass/assets/'],
+				tasks: ['copy']
+			},
+			grunt: {
+				files: ['tasks/*', 'Gruntfile.js'],
+				tasks: ['process']
 			}
 		}
 	});
