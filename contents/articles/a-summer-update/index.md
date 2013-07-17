@@ -2,7 +2,7 @@
 title: A summer update
 author: tri-nguyen
 date: 2013-06-13
-template: article.html
+template: article.hbs
 ---
 
 So here are a few updates since my last post:

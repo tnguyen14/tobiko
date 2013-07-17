@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	grunt.initConfig({
-		config: grunt.file.readJSON('config.json'),
+		config: grunt.file.readJSON('config-dev.json'),
 		compass: {
 			options: {
 				cssDir: '<%= config.buildPath %>/css',
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 		connect: {
 			dev: {
 				options: {
-					port: 7000,
+					port: '<%= config.port %>',
 					middleware: function(connect, options) {
 						return [
 							// serve files in /dist as if they were in the root.
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 			prod: {
 				options: {
 					base: '<%= config.buildPath %>',
-					branch: master,
+					branch: 'master',
 					remote: 'gh-pages'
 				},
 				src: ['**/*']
@@ -142,6 +142,14 @@ module.exports = function(grunt) {
 			templates: {
 				files: ['templates/**/*.{hbs,html}'],
 				tasks: ['handlebars_html:dev']
+			},
+			images: {
+				files: ['contents/**/*.{jpg,png}', 'sass/assets/'],
+				tasks: ['copy']
+			},
+			grunt: {
+				files: ['tasks/*', 'Gruntfile.js'],
+				tasks: ['process']
 			}
 		}
 	});
@@ -186,11 +194,15 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.registerTask('dev', [
+	grunt.registerTask('process', 'Process content files, render html and compile css', [
 		'import_contents',
 		'copy',
 		'handlebars_html:dev',
-		'sass:dev',
+		'sass:dev'
+	]);
+
+	grunt.registerTask('dev', [
+		'process',
 		'connect:dev',
 		'watch'
 	]);

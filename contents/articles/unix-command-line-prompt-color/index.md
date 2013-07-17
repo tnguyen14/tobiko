@@ -2,7 +2,7 @@
 title: UNIX Command Line Prompt Color
 author: tri-nguyen
 date: 2012-09-17
-template: article.html
+template: article.hbs
 ---
 
 a.k.a. first blog post on this site.

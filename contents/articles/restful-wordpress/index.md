@@ -2,7 +2,7 @@
 title: RESTful WordPress
 author: tri-nguyen
 date: 2012-03-28
-template: article.html
+template: article.hbs
 ---
 
 WordPress is an incredibly powerful and user-friendly web platform. It is loved by both developers and users alike. WordPress's polished `wp-admin` and Dashboard are probably one of the biggest reasons WordPress is chosen by many people as their go-to CMS. As a developer, I pick WordPress over other CMSes whenever I feel my client need a friendly CMS to manage their rich content in a smart and usable way, which turns out to be quite often.

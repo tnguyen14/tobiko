@@ -2,7 +2,7 @@
 title: Java's public static void main(String[] args)
 author: tri-nguyen
 date: 2012-09-19
-template: article.html
+template: article.hbs
 ---
 
 *or "what the hell have I got myself into?"*

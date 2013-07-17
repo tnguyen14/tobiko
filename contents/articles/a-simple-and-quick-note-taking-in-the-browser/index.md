@@ -2,7 +2,7 @@
 title: A simple and quick note-taking in the browser
 author: tri-nguyen
 date: 2013-02-01
-template: article.html
+template: article.hbs
 ---
 
 There are currently wayyy too many note-taking apps out there, many of them offer very beautiful well-designed interfaces. But with any application, a maturing market calls for simpler ways of doing things. Enter note-taking in your browser!<span class="more"></span>

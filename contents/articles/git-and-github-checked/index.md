@@ -2,7 +2,7 @@
 title: "Git and GitHub: checked!"
 author: tri-nguyen
 date: 2012-10-01
-template: article.html
+template: article.hbs
 ---
 
 Today marks an important milestone in my developer career: I have successfully managed to get started with Git and Github, including creating my first repo and pushed changes to it.

@@ -2,7 +2,7 @@
 title: You're still sixteen and you assume the best in people
 author: tri-nguyen
 date: 2012-10-31
-template: article.html
+template: article.hbs
 ---
 
 [If there were an Oscar for Best Line in a Movie which line would win it?](http://www.quora.com/If-there-were-an-Oscar-for-Best-Line-in-a-Movie-which-line-would-win-it)

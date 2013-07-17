@@ -2,7 +2,7 @@
 title: tinhnguyenlonghoa.org launched!
 author: tri-nguyen
 date: 2013-03-18
-template: article.html
+template: article.hbs
 ---
 
 [tinhnguyenlonghoa.org](http://tinhnguyenlonghoa.org) has finally launched this past week.

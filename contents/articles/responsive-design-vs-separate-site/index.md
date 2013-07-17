@@ -2,7 +2,7 @@
 title: "Responsive design vs. Separate site: Google Chrome Sync Tabs"
 author: tri-nguyen
 date: 2012-11-18
-template: article.html
+template: article.hbs
 ---
 
 The debate between which strategy to approach for a responsive site is alive and well. The growing support for [Responsive Web Design](http://bradfrost.github.com/this-is-responsive/) strongly indicates that many designers and developers truly think that designing for all viewport sizes at the same time, while a very challenging task, is the way to go (the view that I share).

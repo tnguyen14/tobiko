@@ -2,7 +2,7 @@
 title: The perks of being on this side of the Pacific Ocean
 author: tri-nguyen
 date: 2012-11-06
-template: article.html
+template: article.hbs
 ---
 
 [Steph Yiu](https://twitter.com/crushgear) wrote a fantastic blog post about what she considers [The Little Privileges You Get By Living In The USA](http://www.hoppycow.com/post/35126924731/the-little-privileges-you-get-by-living-in-the-usa), some of which I whole-heartedly agree with. These are the thoughts that go in my mind daily and I'm happy someone has so well articulated and published it on the web.

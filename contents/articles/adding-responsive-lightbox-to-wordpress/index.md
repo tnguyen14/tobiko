@@ -2,7 +2,7 @@
 title: Adding Responsive Lightbox to WordPress
 author: tri-nguyen
 date: 2012-12-01
-template: article.html
+template: article.hbs
 ---
 
 I have finally got around to update all the images on this blog to make use of Lightbox. Woohoo!

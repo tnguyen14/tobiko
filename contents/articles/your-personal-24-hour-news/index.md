@@ -2,7 +2,7 @@
 title: Your Personal 24-hour news
 author: tri-nguyen
 date: 2013-04-27
-template: article.html
+template: article.hbs
 ---
 
 We're all familiar with the concept of the 24-hour news cycle that has become to characterize most of America's news media outlets. Today I want to mention the idea of a personal 24-hour news cycle - something I've noticed for a while but recently gave some more thoughts about.

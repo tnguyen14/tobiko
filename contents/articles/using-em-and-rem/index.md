@@ -2,7 +2,7 @@
 title: Using Em and Rem
 author: tri-nguyen
 date: 2012-11-21
-template: article.html
+template: article.hbs
 ---
 
 Em and rem have slowly become the new standard for sizing font sizes on webpages and even for things like `margin` and `padding`.

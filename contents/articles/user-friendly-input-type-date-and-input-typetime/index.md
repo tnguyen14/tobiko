@@ -2,7 +2,7 @@
 title: User-friendly input[type=date] and input[type=time]
 author: tri-nguyen
 date: 2013-02-18
-template: article.html
+template: article.hbs
 ---
 
 To make a HTML form easier and friendlier for users to use, HTML5 incorporates quite a few [new input types](http://www.html5rocks.com/en/tutorials/forms/html5forms/#toc-inputs-attributes-types). While `url`, `tel` and `email` types have been quite useful when using a mobile device (special keyboard layouts), I find the biggest pain point is with input date and time. Most of the times you don't know what format to input the date in (month first or date first), whether you should use dash versus slash, whether you should include the year etc. <span class="more"></span>

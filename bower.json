@@ -7,5 +7,8 @@
     "almond": "~0.2.5",
     "marked": "~0.2.9",
     "handlebars": "~1.0.0"
+  },
+  "dependencies": {
+    "moment": "~2.1.0"
   }
 }

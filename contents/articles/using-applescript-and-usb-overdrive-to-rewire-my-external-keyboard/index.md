@@ -2,7 +2,7 @@
 title: Using AppleScript and USB Overdrive to rewire my external keyboard
 author: tri-nguyen
 date: 2013-04-16
-template: article.html
+template: article.hbs
 ---
 
 So I've recently made an investment in the [Kinesis Freestyle 2 for Mac](http://www.kinesis-ergo.com/freestyle2_mac.htm) - an amazing keyboard that is supposed to be ergonomic and very friendly for your hands to type.

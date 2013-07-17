@@ -2,7 +2,7 @@
 title: Standing Desk
 author: tri-nguyen
 date: 2012-10-28
-template: article.html
+template: article.hbs
 ---
 
 I've heard of the idea of a standing desk setup being tossed around lately (some people took pictures of their own setup on Twitter), but never really gave it much thought. Last night at the after party of [WordCamp Providence](http://2012.providence.wordcamp.org/), I had an interesting discussion with [Jon Desrosiers](http://jonathandesrosiers.com/) about a DIY standing desk setup that involves getting parts from IKEA.

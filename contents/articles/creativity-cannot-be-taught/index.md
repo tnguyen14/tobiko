@@ -2,7 +2,7 @@
 title: Creativity cannot be taught
 author: tri-nguyen
 date: 2012-01-29
-template: article.html
+template: article.hbs
 ---
 
 In this video, John Cleese explains how we all can achieve some creativity in our daily life, and does so with a great sense of humor and conviction. This is perhaps one of the best speeches I've listened to this year (and considering that January is only closing, there's not much competition). As one of the commenters said, if this was on TED, it would be one of the most popular one.

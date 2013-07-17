@@ -1,0 +1,11 @@
+{{> header}}
+	<body>
+		<h1>{{title}}</h1>
+		{{#if markdown}}
+		{{{markdown}}}
+		{{/if}}
+
+		{{#if content}}
+		{{{content}}}
+		{{/if}}
+{{> footer}}

@@ -2,7 +2,7 @@
 title: Happy Tet
 author: tri-nguyen
 date: 2013-02-10
-template: article.html
+template: article.hbs
 ---
 
 That awesome feeling of a 3 day weekend when its only Saturday and it feels like Sunday, aka the most miserable day of the week in my book, and you realized you still have one more day at home.
