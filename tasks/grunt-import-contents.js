@@ -22,7 +22,7 @@ module.exports = function (grunt) {
 	}
 
 	// parse JSON and markdown content
-	var parseContent = function(filepath) {
+	var parseContent = function(filepath, options) {
 		var ext = path.extname(filepath),
 			basename = path.basename(filepath),
 			// remove 'contents' from path
@@ -43,7 +43,9 @@ module.exports = function (grunt) {
 			var fileContent = grunt.file.read(filepath);
 
 			// set options for marked
-			marked.setOptions(options.markdown);
+			if (options && options.markdown) {
+				marked.setOptions(options.markdown);
+			}
 
 			try {
 				var sections = fileContent.split('---');
@@ -131,7 +133,7 @@ module.exports = function (grunt) {
 				var dirname = path.dirname(filepath),
 					directories = dirname.split(path.sep),
 					basename = path.basename(filepath),
-					content = parseContent(filepath);
+					content = parseContent(filepath, options);
 
 				// start at the top of the content tree
 				var currentDir = contentTree;
