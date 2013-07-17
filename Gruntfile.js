@@ -192,11 +192,15 @@ module.exports = function(grunt) {
 	});
 
 
-	grunt.registerTask('dev', [
+	grunt.registerTask('process', 'Process content files, render html and compile css', [
 		'import_contents',
 		'copy',
 		'handlebars_html:dev',
-		'sass:dev',
+		'sass:dev'
+	]);
+
+	grunt.registerTask('dev', [
+		'process',
 		'connect:dev',
 		'watch'
 	]);
