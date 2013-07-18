@@ -66,7 +66,10 @@ module.exports = function(grunt) {
 		handlebars_html: {
 			options : {
 				partialDir : 'templates/partials',
-				helperDir : 'templates/helpers'
+				helperDir : 'templates/helpers',
+				paginate: [
+					{dir: 'articles', postPerPage: 4, template: 'archive.hbs'}
+				]
 			},
 			dev: {
 				src: 'templates/*.hbs',

@@ -97,7 +97,6 @@ module.exports = function (grunt) {
 							if (dirname === '.') {
 								dirname = '';
 							}
-
 							// write the compiled html to file
 							var outPath = path.join(f.dest, dirname, basename + '.html');
 							grunt.file.write(outPath, html);
@@ -108,8 +107,6 @@ module.exports = function (grunt) {
 					} else {
 						// Keep going deeper into the content tree if there is more
 						if (_.isObject(content)) {
-							grunt.log.writeln('Directory "' + key + '" was created.');
-
 							renderContent(content);
 						} else {
 							return;
@@ -119,6 +116,76 @@ module.exports = function (grunt) {
 			};
 
 			renderContent(data.contents);
+
+			// Pagination
+			var paginateOptions = {};
+			_(options.paginate).each(function(opt){
+				// make the directory the key, so easier to access options
+				paginateOptions[opt.dir] = {
+					postPerPage: opt.postPerPage,
+					template: opt.template
+				}
+			});
+
+			// store all directories' archives
+			var archives = {};
+
+			var paginate = function(content) {
+				// iterate through global content object
+				_(content).each(function (content, key, collections) {
+					// check if any directory is an archive directory
+					if (key in paginateOptions) {
+						var archive = archives[key] = {};
+						var posts = [];
+
+						// keeping it short
+						var postPerPage = paginateOptions[key].postPerPage;
+						var template = paginateOptions[key].template;
+
+						// convert content to array to calculate length
+						_(content).each(function(c, k) {
+							var p = {};
+							p[k] = c;
+							posts.push(p);
+						});
+
+						var numPages = Math.ceil(posts.length / postPerPage);
+						// set up archive page
+						if (numPages > paginateOptions[key].postPerPage) {
+							for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+								archive[pageNum] = {};
+								var archivePage = archive[pageNum]['index.html'] = {};
+								// add template so it gets rendered
+								archivePage.template = template;
+								// add correct filepath
+								archivePage.filepath = path.join(key, pageNum.toString(), 'index.html');
+							}
+						}
+						// put posts into archive
+						// keep track of an index of posts
+						var j = 1;
+						for (var p in posts){
+							var pageNum = Math.ceil(j / postPerPage);
+							var archivePage = archive[pageNum]['index.html'];
+							archivePage['posts'] = {};
+							_.extend(archivePage['posts'], posts[p]);
+							j++;
+						}
+
+						// rename object 1 to index.html
+						archive['index.html'] = archive[1]['index.html'];
+						archive['index.html'].filepath = path.join(key, 'index.html');
+						delete archive[1];
+					}
+				});
+			};
+
+			// paginate if something is specified
+			if (!_.isEmpty(paginateOptions)) {
+				paginate(data.contents);
+				console.log(archives);
+				renderContent(archives);
+			}
 
 		});
 	});
