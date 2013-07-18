@@ -8,7 +8,15 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
 1. Run `git clone` to download the app.
 2. Run `npm install`
 3. Run `bower install`
-4. Use `grunt` on the command line to generate preview, build and deploy your website.
+
+### Getting started
+1. To get the basic site, copy `example` folder to root folder.
+```sh
+$ cp example/ ./
+```
+2. Run `grunt` to generate preview, build and deploy your website.
+- By default, running `grunt` will run `grunt dev`.
+- Other grunt options include `grunt build` and `grunt deploy`
 
 ### config.json
 High level, site-wide configurations can be specified in `config.json`.
@@ -113,7 +121,7 @@ Helpers and Partials are supported. They can be stored under `helpers` and `part
 
 Each page needs to specify its own template. This can be done with a JSON property
 ```js
-  `template: index.hbs`
+  template: index.hbs
 ```
 or in the YAML frontmatter. A file with no `'template'` property will not be rendered.
 

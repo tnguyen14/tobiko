@@ -108,8 +108,6 @@ module.exports = function (grunt) {
 					} else {
 						// Keep going deeper into the content tree if there is more
 						if (_.isObject(content)) {
-							grunt.log.writeln('Directory "' + key + '" was created.');
-
 							renderContent(content);
 						} else {
 							return;
