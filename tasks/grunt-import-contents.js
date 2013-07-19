@@ -37,8 +37,8 @@ module.exports = function (grunt) {
 		if (ext === '.json') {
 			content = grunt.file.readJSON(filepath);
 
-			// parse markdown files
-			// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
+		// parse markdown files
+		// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
 		} else if (ext === '.md') {
 			var fileContent = grunt.file.read(filepath);
 
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
 				// convert new line characters to html line breaks
 				markdown = nl2br(markdown);
 
-				// content['markdown'] = markdown;
+				content['markdown'] = markdown;
 
 			} catch (e) {
 				grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);

@@ -73,8 +73,8 @@ module.exports = function (grunt) {
 			});
 
 			// recursively go through content and display the ones with a template
-			var renderContent = function(content) {
-				_(content).forEach(function (content, key, collections) {
+			var renderContent = function(contents) {
+				_(contents).forEach(function (content, key, collections) {
 					// if the file has a template property -> render it
 					if (content.template) {
 						if (templates[content.template]) {
@@ -126,7 +126,6 @@ module.exports = function (grunt) {
 			// @return {Array}
 			var objToArray = function(obj) {
 				var array = [];
-					// console.log(obj);
 				_(obj).forEach(function(value, key) {
 					var el = {};
 					// if value already been through renderContent(), it will already have 'content' property encapsulation
@@ -216,7 +215,7 @@ module.exports = function (grunt) {
 					var archivePage = archive[pageNum]['index.html'];
 					_.extend(archivePage['posts'], posts[i]);
 				}
-				// console.log(posts);
+
 				// rename object 1 to index.html
 				archive['index.html'] = archive['1']['index.html'];
 				archive['index.html'].filepath = path.join(key, 'index.html');

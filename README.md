@@ -13,7 +13,9 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
 ### config.json
 High level, site-wide configurations can be specified in `config.json`.
 
-### Contents
+## Contents
+*This section explains the inner working of the [`import_contents` Grunt task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
+
 By default, the site contents will be in the `contents` folder. This option could be changed in `Gruntfile.js`, under `import_contents` task.
 
 Content can be written in `json` and `markdown` with `yaml` [frontmatter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter).
@@ -105,19 +107,45 @@ By default, a file without a `date` specified will have the `date` value of when
 
 See [momentjs](http://momentjs.com) for more information about the date format.
 
-### Templates
-By default this app uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
+## Templates
+*This section explains the inner working of the [`handlebars_html` Grunt task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-handlebars-html.js).*
+
+By default tobiko uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
 *Note: true to a static site generator, all compiled templates need to be in `.html` formats*
 
 Helpers and Partials are supported. They can be stored under `helpers` and `partials` directories under `templates`. These directory names of course can be changed in `Gruntfile.js`.
 
 Each page needs to specify its own template. This can be done with a JSON property
 ```js
-  `template: index.hbs`
+  {template: index.hbs}
 ```
-or in the YAML frontmatter. A file with no `'template'` property will not be rendered.
+or in the YAML frontmatter. A file with no `template` property will not be rendered.
 
-A file's content is available in the template under the `content` variable.
+A file's content is available in the template under the `content` variable. Other sub-directories included in the same directory is accessible in the template with [nesting](#nesting).
+
+### Pagination and Archives
+A directory with a big number of posts could be configured to paginate. The paginated pages are called archives.
+The option for enabling pagination can be added in `Gruntfile.js` under `handlebars_html` task. For example:
+```js
+  handlebars_html: {
+    options : {
+      partialDir : 'templates/partials',
+      helperDir : 'templates/helpers',
+      paginate: [
+        {dir: 'articles', orderBy: 'date', postPerPage: 4, template: 'archive.hbs', title: 'Articles'}
+      ]
+    }
+  }
+```
+Each object in the `paginate` option represents a directory to be paginated. The options for each directory are:
+* `dir`: (string) directory name
+* `orderby`: (number/ date) how to order the posts in the archives. Default to [date](#date)
+* `postPerPage`: (number) number of posts to be displayed per archive page
+* `template`: (string) the template used to display these archive pages
+* `title`: (string) title of these archive pages (this will be made available to use in template as `content.title`)
+
+#### Template
+The posts in each archive page is accessible in the template file under `content` property, similar to a regular file. See [example](https://github.com/tnguyen14/tobiko/blob/master/example/templates/archive.hbs).
 
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
