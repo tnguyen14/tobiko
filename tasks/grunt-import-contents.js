@@ -61,7 +61,7 @@ module.exports = function (grunt) {
 				// convert new line characters to html line breaks
 				markdown = nl2br(markdown);
 
-				content['markdown'] = markdown;
+				// content['markdown'] = markdown;
 
 			} catch (e) {
 				grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);

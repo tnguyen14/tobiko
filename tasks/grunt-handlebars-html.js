@@ -99,9 +99,9 @@ module.exports = function (grunt) {
 								dirname = '';
 							}
 							// write the compiled html to file
-							var outPath = path.join(f.dest, dirname, basename + '.html');
-							grunt.file.write(outPath, html);
-							grunt.log.writeln('"' + outPath + '" was created.');
+							var outpath = path.join(f.dest, dirname, basename + '.html');
+							grunt.file.write(outpath, html);
+							grunt.log.writeln('"' + outpath + '" was created.');
 						} else {
 							grunt.log.writeln('Could not find template ' + content.template + ' for ' + key);
 						}
@@ -116,11 +116,119 @@ module.exports = function (grunt) {
 				});
 			};
 
+			// render all the contents
 			renderContent(data.contents);
 
 			// Pagination
+
+			// convert an object of objects into array of objects
+			// @param {Object}
+			// @return {Array}
+			var objToArray = function(obj) {
+				var array = [];
+					// console.log(obj);
+				_(obj).forEach(function(value, key) {
+					var el = {};
+					// if value already been through renderContent(), it will already have 'content' property encapsulation
+					el[key] = (value.hasOwnProperty('content')) ? value['content'] : value;
+					array.push(el);
+				});
+				return array;
+			}
+
+			// sort array by keys
+			// default to date
+			var sortArrayByKey = function(array, key) {
+				array.sort(function(a,b) {
+					var sortKey = (key) ? key : 'date',
+						aKey,
+						bKey,
+						compareResult;
+
+					if (a.hasOwnProperty(sortKey)) {
+						aKey = a[sortKey];
+						bKey = b[sortKey];
+					} else {
+						// Dig deeper for sortKey property
+						for (var prop in a) {
+							aKey = a[prop][sortKey];
+						}
+						for (var prop in b) {
+							bKey = b[prop][sortKey];
+						}
+					}
+
+					switch (sortKey) {
+						case 'date':
+							var aDate = moment(aKey),
+								bDate = moment(bKey);
+							if (aDate.isBefore(bDate)) {
+								compareResult = 1;
+							} else if (aDate.isSame(bDate)) {
+								compareResult = 0;
+							} else if (aDate.isAfter(bDate)) {
+								compareResult = -1;
+							}
+							break;
+						default:
+							compareResult = aKey - bKey;
+					}
+					return compareResult;
+				});
+			}
+
+			var paginate = function(dir, key, options) {
+
+				var archive = {},
+					posts = [];
+
+				// keeping it short
+				var postPerPage = options.postPerPage,
+					template = options.template,
+					title = options.title,
+					orderBy = options.orderby;
+
+				// convert content to array to calculate length
+				posts = objToArray(dir);
+
+				// sorting
+				sortArrayByKey(posts, orderBy);
+
+				var numPages = Math.ceil(posts.length / postPerPage);
+
+				// set up each archive page
+				for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+					archive[pageNum] = {};
+					var archivePage = archive[pageNum]['index.html'] = {};
+					// add template so it gets rendered
+					archivePage.template = template;
+					// a title as well
+					archivePage.title = title;
+					// initialize empty posts object
+					archivePage.posts = {};
+					// add correct filepath
+					archivePage.filepath = path.join(key, pageNum.toString(), 'index.html');
+				}
+
+				// put posts into each archive page
+				for (var i = 0; i < posts.length; i++){
+					var pageNum = Math.ceil((i+1)/ postPerPage);
+					var archivePage = archive[pageNum]['index.html'];
+					_.extend(archivePage['posts'], posts[i]);
+				}
+				// console.log(posts);
+				// rename object 1 to index.html
+				archive['index.html'] = archive['1']['index.html'];
+				archive['index.html'].filepath = path.join(key, 'index.html');
+				// remove reference to 1
+				delete archive['1'];
+
+				return archive;
+			};
+
+			// Get pagination options from Gruntfile.js
 			var paginateOptions = {};
-			_(options.paginate).each(function(opt){
+			_(options.paginate).forEach(function(opt){
 				// make the directory the key, so easier to access options
 				paginateOptions[opt.dir] = {
 					postPerPage: opt.postPerPage,
@@ -130,98 +238,18 @@ module.exports = function (grunt) {
 				}
 			});
 
-			// store all directories' archives
-			var archives = {};
-
-			var paginate = function(content) {
-				// iterate through global content object
-				_(content).each(function (content, key, collections) {
-					// check if any directory is an archive directory
-					if (key in paginateOptions) {
-						var archive = archives[key] = {};
-						var posts = [];
-
-						// keeping it short
-						var postPerPage = paginateOptions[key].postPerPage,
-							template = paginateOptions[key].template,
-							title = paginateOptions[key].title,
-							orderBy = paginateOptions[key].orderby;
-
-						// convert content to array to calculate length
-						_(content).each(function(c, k) {
-							var p = {};
-							// if c already been through renderContent(), it will already have 'content' property encapsulation
-							p[k] = (c.hasOwnProperty('content')) ? c['content'] : c;
-							posts.push(p);
-						});
-
-						// sorting
-						// default to date, could be any property
-						posts.sort(function(a,b) {
-							var sortKey = (orderBy) ? orderBy : 'date';
-							var aKey, bKey;
-							var compareResult;
-
-							for (var prop in a) {
-								aKey = a[prop][sortKey];
-							}
-							for (var prop in b) {
-								bKey = b[prop][sortKey];
-							}
-							switch (sortKey) {
-								case 'date':
-									var aDate = moment(aKey);
-									var bDate = moment(bKey);
-									if (aDate.isBefore(bDate)) {
-										compareResult = 1;
-									} else if (aDate.isSame(bDate)) {
-										compareResult = 0;
-									} else if (aDate.isAfter(bDate)) {
-										compareResult = -1;
-									}
-									break;
-								default:
-									compareResult = aKey - bKey;
-							}
-							return compareResult;
-						});
-
-						var numPages = Math.ceil(posts.length / postPerPage);
-						// set up archive page
-						for (var pageNum = 1; pageNum <= numPages; pageNum++) {
-							archive[pageNum] = {};
-							var archivePage = archive[pageNum]['index.html'] = {};
-							// add template so it gets rendered
-							archivePage.template = template;
-							// a title as well
-							archivePage.title = title;
-							// initialize empty posts object
-							archivePage.posts = {};
-							// add correct filepath
-							archivePage.filepath = path.join(key, pageNum.toString(), 'index.html');
-						}
-
-						// put posts into archive
-						// keep track of an index of posts
-						var j = 1;
-						for (var p in posts){
-							var pageNum = Math.ceil(j / postPerPage);
-							var archivePage = archive[pageNum]['index.html'];
-							_.extend(archivePage['posts'], posts[p]);
-							j++;
-						}
-
-						// rename object 1 to index.html
-						archive['index.html'] = archive[1]['index.html'];
-						archive['index.html'].filepath = path.join(key, 'index.html');
-						delete archive[1];
-					}
-				});
-			};
-
 			// paginate if something is specified
 			if (!_.isEmpty(paginateOptions)) {
-				paginate(data.contents);
+				// store all directories' archives
+				var archives = {};
+				// iterate through global content object
+				_(data.contents).forEach(function(dir, key) {
+					if ( paginateOptions.hasOwnProperty(key) ) {
+						archives[key] = paginate(dir, key, paginateOptions[key]);
+					}
+				});
+
+				// render all the paginated archives
 				renderContent(archives);
 			}
 
