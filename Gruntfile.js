@@ -68,7 +68,7 @@ module.exports = function(grunt) {
 				partialDir : 'templates/partials',
 				helperDir : 'templates/helpers',
 				paginate: [
-					{dir: 'articles', postPerPage: 4, template: 'archive.hbs'}
+					{dir: 'articles', postPerPage: 4, template: 'archive.hbs', title: 'Articles'}
 				]
 			},
 			dev: {

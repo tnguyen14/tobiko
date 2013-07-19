@@ -1,7 +1,7 @@
 ---
 title: RESTful WordPress
 author: tri-nguyen
-date: 2012-03-28
+date: 2013-03-28
 template: article.hbs
 ---
 

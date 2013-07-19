@@ -14,6 +14,7 @@ module.exports = function (grunt) {
 
 	var fs = require('fs'),
 		path = require('path'),
+		moment = require('moment'),
 		Handlebars = require('handlebars');
 
 	grunt.registerMultiTask('handlebars_html', 'write templates to html', function () {
@@ -123,7 +124,9 @@ module.exports = function (grunt) {
 				// make the directory the key, so easier to access options
 				paginateOptions[opt.dir] = {
 					postPerPage: opt.postPerPage,
-					template: opt.template
+					template: opt.template,
+					title: opt.title,
+					orderBy: opt.orderby
 				}
 			});
 
@@ -139,35 +142,71 @@ module.exports = function (grunt) {
 						var posts = [];
 
 						// keeping it short
-						var postPerPage = paginateOptions[key].postPerPage;
-						var template = paginateOptions[key].template;
+						var postPerPage = paginateOptions[key].postPerPage,
+							template = paginateOptions[key].template,
+							title = paginateOptions[key].title,
+							orderBy = paginateOptions[key].orderby;
 
 						// convert content to array to calculate length
 						_(content).each(function(c, k) {
 							var p = {};
-							p[k] = c;
+							// if c already been through renderContent(), it will already have 'content' property encapsulation
+							p[k] = (c.hasOwnProperty('content')) ? c['content'] : c;
 							posts.push(p);
+						});
+
+						// sorting
+						// default to date, could be any property
+						posts.sort(function(a,b) {
+							var sortKey = (orderBy) ? orderBy : 'date';
+							var aKey, bKey;
+							var compareResult;
+
+							for (var prop in a) {
+								aKey = a[prop][sortKey];
+							}
+							for (var prop in b) {
+								bKey = b[prop][sortKey];
+							}
+							switch (sortKey) {
+								case 'date':
+									var aDate = moment(aKey);
+									var bDate = moment(bKey);
+									if (aDate.isBefore(bDate)) {
+										compareResult = 1;
+									} else if (aDate.isSame(bDate)) {
+										compareResult = 0;
+									} else if (aDate.isAfter(bDate)) {
+										compareResult = -1;
+									}
+									break;
+								default:
+									compareResult = aKey - bKey;
+							}
+							return compareResult;
 						});
 
 						var numPages = Math.ceil(posts.length / postPerPage);
 						// set up archive page
-						if (numPages > paginateOptions[key].postPerPage) {
-							for (var pageNum = 1; pageNum <= numPages; pageNum++) {
-								archive[pageNum] = {};
-								var archivePage = archive[pageNum]['index.html'] = {};
-								// add template so it gets rendered
-								archivePage.template = template;
-								// add correct filepath
-								archivePage.filepath = path.join(key, pageNum.toString(), 'index.html');
-							}
+						for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+							archive[pageNum] = {};
+							var archivePage = archive[pageNum]['index.html'] = {};
+							// add template so it gets rendered
+							archivePage.template = template;
+							// a title as well
+							archivePage.title = title;
+							// initialize empty posts object
+							archivePage.posts = {};
+							// add correct filepath
+							archivePage.filepath = path.join(key, pageNum.toString(), 'index.html');
 						}
+
 						// put posts into archive
 						// keep track of an index of posts
 						var j = 1;
 						for (var p in posts){
 							var pageNum = Math.ceil(j / postPerPage);
 							var archivePage = archive[pageNum]['index.html'];
-							archivePage['posts'] = {};
 							_.extend(archivePage['posts'], posts[p]);
 							j++;
 						}
@@ -183,7 +222,6 @@ module.exports = function (grunt) {
 			// paginate if something is specified
 			if (!_.isEmpty(paginateOptions)) {
 				paginate(data.contents);
-				console.log(archives);
 				renderContent(archives);
 			}
 

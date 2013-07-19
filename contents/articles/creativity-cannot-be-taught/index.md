@@ -1,7 +1,7 @@
 ---
 title: Creativity cannot be taught
 author: tri-nguyen
-date: 2012-01-29
+date: 2013-01-29
 template: article.hbs
 ---
 
