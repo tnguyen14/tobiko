@@ -12,6 +12,7 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
 ### Getting started
 1. To get the basic site, copy `example` folder to root folder.
 ```sh
+# from the root folder of your project
 $ cp example/ ./
 ```
 2. Run `grunt` to generate preview, build and deploy your website.
