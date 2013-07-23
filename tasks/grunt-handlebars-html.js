@@ -81,10 +81,11 @@ module.exports = function (grunt) {
 							// expose env and config to content
 							content.env = env;
 							// use config_dev if in dev environment
-							content.config = (env === 'dev') ? config_dev : config;
+							config = (env === 'dev') ? config_dev : config;
 
 							// pass in the whole collections to make other sibling contents available
 							collections.content = content;
+							collections.config = config;
 							var html = templates[content.template](collections);
 
 							// if a filepath is specified, use that instead (it should be after contents are imported)
