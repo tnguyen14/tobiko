@@ -6,88 +6,17 @@
 module.exports = function (grunt) {
 	var fs = require('fs'),
 		path = require('path'),
-		jsYAML = require('js-yaml'),
-		marked = require('marked'),
-		moment = require('moment');
+		_ = grunt.util._,
+		content = require('./lib/content').init(grunt);
 
-
-	/* convert new line characters to html linebreaks
-	 * inspired by nl2br function from php.js
-	 * https://github.com/kvz/phpjs/blob/master/functions/strings/nl2br.js
-	 * @param {String} str
-	 * @return {String}
-	*/
-	var nl2br = function(str) {
-		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
-	}
-
-	// parse JSON and markdown content
-	var parseContent = function(filepath, options) {
-		var ext = path.extname(filepath),
-			basename = path.basename(filepath),
-			// remove 'contents' from path
-			content;
-
-		// Ignore draft posts (_) and dotfiles
-		if (basename[0] === '_' || basename[0] === '.') {
-			return;
-		}
-
-		// get the JSON files
-		if (ext === '.json') {
-			content = grunt.file.readJSON(filepath);
-
-		// parse markdown files
-		// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
-		} else if (ext === '.md') {
-			var fileContent = grunt.file.read(filepath);
-
-			// set options for marked
-			if (options && options.markdown) {
-				marked.setOptions(options.markdown);
-			}
-
-			try {
-				var sections = fileContent.split('---');
-				// YAML frontmatter is the part in between the 2 '---'
-				content = jsYAML.safeLoad(sections[1]);
-
-				// get to the markdown part
-				sections.shift();
-				sections.shift();
-
-				// convert markdown data to html
-				var markdown = marked(sections.join('---'));
-				// convert new line characters to html line breaks
-				markdown = nl2br(markdown);
-
-				content['markdown'] = markdown;
-
-			} catch (e) {
-				grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
-			}
-		}
-
-		// add support for date using moment.js http://momentjs.com/
-		if (content) {
-			if(!content.date) {
-				content.date = fs.statSync(filepath).ctime;
-			}
-			// if date isn't already a moment type, convert it to momentjs
-			if (!moment.isMoment(content.date)) {
-				var mDate = moment(content.date);
-				// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
-				if (mDate.isValid()) {
-					content.date = mDate;
-				} else {
-					grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
-				}
-			}
-		}
-		return content;
-	};
+	// log colors
+	var red   = '\u001b[31m',
+		blue  = '\u001b[34m',
+		green = '\u001b[32m',
+		reset = '\u001b[0m';
 
 	// inspired from grunt.file.recurse function https://github.com/gruntjs/grunt/blob/master/lib/grunt/file.js
+	/*
 	var getDataRecurse = function(rootdir, data, subdir) {
 		var abspath = subdir ? path.join(rootdir, subdir) : rootdir;
 		fs.readdirSync(abspath).forEach(function(filename){
@@ -96,10 +25,11 @@ module.exports = function (grunt) {
 				data[filename] = {};
 				getDataRecurse(rootdir, data[filename], path.join(subdir || '', filename || ''));
 			} else {
-				data[filename] = parseContent(filepath);
+				data[filename] = content.parse(filepath);
 			}
 		});
 	};
+	*/
 
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var options = this.options({
@@ -114,8 +44,6 @@ module.exports = function (grunt) {
 
 		// global config
 		var config = grunt.file.readJSON(options.config)
-
-		grunt.verbose.writeflags(options, 'Options');
 
 		// Content Tree
 		var contentTree = {};
@@ -132,21 +60,27 @@ module.exports = function (grunt) {
 			.forEach(function (filepath) {
 				var dirname = path.dirname(filepath),
 					directories = dirname.split(path.sep),
-					ext = path.extname(filepath),
-					basename = path.basename(filepath, ext),
+					basename = path.basename(filepath),
 					relpath = path.relative(options.baseDir, filepath),
-					content = {};
+					filecontent = {};
 
-				content = parseContent(filepath, options);
+				filecontent = content.parse(filepath, options);
 
 				// add filepath property if not specified
-				if (!content.filepath) {
-					content.filepath = relpath;
+				if (!filecontent.filepath) {
+					filecontent.filepath = relpath;
+				}
+				filecontent.url = '/' + path.dirname(relpath);
+
+				// add full path for images
+				var image = /<img src=\"(.*\.(jpg|png))\"/g;
+				if (filecontent.main) {
+					filecontent.main = filecontent.main.replace(image, '<img src=\"' + filecontent.url + "/$1\"");
 				}
 
+				// Put content to the contentTree
 				// start at the top of the content tree
 				var currentDir = contentTree;
-
 				// iterate through the directory path
 				for (var obj in directories) {
 					// if the directory doesn't exist yet, create an empty object in the content tree
@@ -158,9 +92,42 @@ module.exports = function (grunt) {
 					}
 				}
 				// once the deepest directory level is reached, put new content on the Content Tree
-				currentDir[basename] = content;
-
+				currentDir[basename] = filecontent;
 			});
+
+			// Get pagination options from Gruntfile.js
+			var paginateOptions = {};
+			_(options.paginate).forEach(function(opt){
+				// make the directory the key, so easier to access options
+				paginateOptions[opt.dir] = {
+					postPerPage: opt.postPerPage,
+					template: opt.template,
+					title: opt.title,
+					orderBy: opt.orderby
+				}
+			});
+
+			// paginate if something is specified
+			if (!_.isEmpty(paginateOptions)) {
+				// store all directories' archives
+				var archives = contentTree.contents.archives = {};
+				// iterate through global content object
+				// only support archive at top level
+				_(contentTree.contents).forEach(function(dir, key) {
+					if ( paginateOptions.hasOwnProperty(key) ) {
+						var archive = content.paginate(dir, key, paginateOptions[key]);
+
+						// make the first page of archive available at top level
+						if (archive['1']) {
+							archive['index.html'] = archive['1']['index.html'];
+						}
+						_.extend(contentTree.contents[key], archive);
+
+						// also make this archive available for a special archive portion of the contentTree
+						contentTree.contents.archives[key] = archive;
+					}
+				});
+			}
 
 			grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
 		});
