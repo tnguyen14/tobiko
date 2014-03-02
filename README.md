@@ -155,5 +155,56 @@ Each object in the `paginate` option represents a directory to be paginated. The
 #### Template
 The `posts` in each archive page is accessible in the template file under `content` property, similar to a regular file. See [example](https://github.com/tnguyen14/tobiko-example/blob/master/example/templates/archive.hbs).
 
+## Grunt tasks
+Thanks to [grunt-load-config](https://github.com/firstandthird/load-grunt-config/), the grunt task configs are neatly organized under the [`config`](https://github.com/tnguyen14/tobiko/tree/master/config) directory.
+
+A few [tasks](https://github.com/tnguyen14/tobiko/blob/master/config/aliases.yaml) are made available below. The default is `dev`.
+1. `dev`: Running `grunt dev` does a few things:
+- processing the contents and build out the templates
+- minify images and create different resolutions of the same image for responsive use
+- compile sass and prefix it if necessary
+- create a connect server to render to content locally
+- [watch](https://github.com/tnguyen14/tobiko/blob/master/config/watch.js) for changes
+
+2. `build`: Running `grunt build` will prepare all the content (parse, build templates, create responsive images, mininfy them, compile sass and minify css) for deployment.
+3. `deploy`: `build` and deploy with `gh-pages`. See [deployment](#deployment) guide below.
+
+### Deployment
+The site can be deployed by default to [Github Pages](http://pages.github.com) using the [`grunt-gh-pages`](https://github.com/tschaub/grunt-gh-pages) task (more options can be found on that plugin page).
+
+It can be configured in `Gruntfile.js` as follows:
+
+```js
+  grunt.config.set('gh-pages', {
+    prod: {
+      options: {
+        base: '<%= buildPath %>',
+      },
+      src: ['**/*']
+    }
+  });
+```
+
+Optionally, you can also deploy your site to a server of your choice using the [`grunt-rsync`](https://github.com/jedrichards/grunt-rsync) plugin
+
+```js
+  // deploy via rsync
+  grunt.config.set('rsync', {
+    options: {
+      args: ["--verbose"],
+      src: "<%= buildPath %>/",
+      exclude: ['.git*', 'node_modules', '.sass-cache', 'Gruntfile.js', 'package.json', '.DS_Store', 'README.md', '.jshintrc'],
+      recursive: true,
+      syncDestIgnoreExcl: true
+    },
+    prod: {
+      options: {
+        dest: "/path/to/your/site",
+        host: "server_address"
+      }
+    }
+  });
+```
+
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
