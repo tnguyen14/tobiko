@@ -8,5 +8,13 @@
 		"dir": "templates",
 		"partialDir": "templates/partials",
 		"helperDir": "templates/helpers"
-	}
+	},
+	"paginate": [
+		{
+			"dir": "posts",
+			"postPerPage": 4,
+			"template": "archive.hbs",
+			"title": "Posts"
+		}
+	]
 }

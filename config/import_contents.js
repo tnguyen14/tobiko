@@ -8,14 +8,7 @@ module.exports = {
 			smartypants: true,
 			langPrefix: 'language-'
 		},
-		paginate: [
-			{
-				dir: 'articles',
-				postPerPage: 4,
-				template: 'archive.hbs',
-				title: 'Articles'
-			}
-		]
+		paginate: '<%= paginate %>'
 	},
 	all: {
 		src: '<%= contentDir %>/**/*.{json,md}',

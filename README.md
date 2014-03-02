@@ -134,21 +134,20 @@ A file's content is available in the template under the `content` variable. Othe
 
 ### Pagination and Archives
 A directory with a big number of posts could be configured to paginate. The paginated pages are called archives.
-The option for enabling pagination can be added in `Gruntfile.js` under `handlebars_html` task. For example:
+The option for enabling pagination can be added in tobiko's `config.json`. For example:
 ```js
-  handlebars_html: {
-    options : {
-      partialDir : 'templates/partials',
-      helperDir : 'templates/helpers',
-      paginate: [
-        {dir: 'articles', orderBy: 'date', postPerPage: 4, template: 'archive.hbs', title: 'Articles'}
-      ]
+  "paginate": [
+    {
+      "dir": "posts",
+      "postPerPage": 4,
+      "template": "archive.hbs",
+      "title": "Posts"
     }
-  }
+  ]
 ```
 Each object in the `paginate` option represents a directory to be paginated. The options for each directory are:
 * `dir`: (string) directory name
-* `orderby`: (number/ date) how to order the posts in the archives. Default to [date](#date)
+* `orderby`: (string) how to order the posts in the archives. Default to ['date'](#date)
 * `postPerPage`: (number) number of posts to be displayed per archive page
 * `template`: (string) the template used to display these archive pages
 * `title`: (string) title of these archive pages (this will be made available to use in template as `content.title`)
