@@ -1,6 +1,6 @@
 module.exports = {
 	options : {
-		baseDir: 'contents',
+		baseDir: '<%= contentDir %>',
 		config : 'config.json',
 		markdown: {
 			breaks: true,
@@ -18,7 +18,7 @@ module.exports = {
 		]
 	},
 	all: {
-		src: 'contents/**/*.{json,md}',
+		src: '<%= contentDir %>/**/*.{json,md}',
 		dest: 'build/data.json'
 	}
 }
