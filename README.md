@@ -4,16 +4,31 @@
 ## How to use
 This generator app is driven by [grunt.js](http://gruntjs.com), which means that it is highly customizable to suit your developer needs. An example of how this generator can be seen at [tobiko-example](https://github.com/tnguyen14/tobiko-example).
 
-1. To get a basic site `git clone git@github.com:tnguyen14/tobiko-example.git`
+1. To get a basic site
+    ```sh
+    git clone git@github.com:tnguyen14/tobiko-example.git
+    ```
 2. Install tobiko as a subtree.
-```
-git subtree add --prefix=tobiko --squash git@github.com:tnguyen14/tobiko.git master
-# create new tobiko config
-cp tobshiko/config.sample.json tobiko/config.json
-```
+    ```sh
+    git subtree add --prefix=tobiko --squash git@github.com:tnguyen14/tobiko.git master
+    # create new tobiko config
+    cp tobshiko/config.sample.json tobiko/config.json
+    ```
+3. Install bower dependencies. If you don't have bower, [install it first](http://bower.io/).
+    ```sh
+    bower install
+    ```
+4. Install npm dependencies. If you don't have npm or node, [install it first](http://nodejs.org).
+    ```sh
+    npm install
+    ```
+5. Write code! If you don't have `grunt-cli`, install that first with `npm install -g grunt-cli`.
+    ```sh
+    grunt
+    ```
 
 ## Contents
-*This section explains the inner working of the [`import_contents` Grunt task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
+*This section explains the inner working of the [`import_contents` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
 
 By default, the site content will be in the `contents` folder. This option could be changed in tobiko's `config.json`, under `contentDir` property.
 
