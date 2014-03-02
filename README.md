@@ -2,32 +2,30 @@
 ### node.js static site generator using grunt
 
 ## How to use
-This generator app is driven by [grunt.js](http://gruntjs.com), which means that it is highly customizable to suit your developer needs. Be sure to take a look at [Gruntfile.js](https://github.com/tnguyen14/tobiko/blob/master/Gruntfile.js).
+This generator app is driven by [grunt.js](http://gruntjs.com), which means that it is highly customizable to suit your developer needs. An example of how this generator can be seen at [tobiko-example](https://github.com/tnguyen14/tobiko-example).
 
-### Install
-1. Run `git clone` to download the app.
-2. Run `npm install`
-3. Run `bower install`
-
-### Getting started
-1. To get the basic site, copy `example` folder to root folder.
+### Usage
+1. To get the basic site, see [tobiko-example](https://github.com/tnguyen14/tobiko-example).
 
 ```sh
-# from the root folder of your project
-$ cp example/ ./
+git clone git@github.com:tnguyen14/tobiko-example.git
 ```
 
-2. Run `grunt` to generate preview, build and deploy your website.
-- By default, running `grunt` will run `grunt dev`.
-- Other grunt options include `grunt build` and `grunt deploy`
+2. Install `tobiko` as a subtree
+```sh
+git subtree add --prefix=tobiko --squash git@github.com:tnguyen14/tobiko.git master
+
+# create new tobiko config
+cp tobiko/config.sample.json tobiko/config.json
+```
 
 ### config.json
-High level, site-wide configurations can be specified in `config.json`.
+High level, site-wide configurations can be specified in `config.json` in the root folder.
 
 ## Contents
 *This section explains the inner working of the [`import_contents` Grunt task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
 
-By default, the site contents will be in the `contents` folder. This option could be changed in `Gruntfile.js`, under `import_contents` task.
+By default, the site content will be in the `contents` folder. This option could be changed in tobiko's `config.json`, under `contentDir` property.
 
 Content can be written in `json` and `markdown` with `yaml` [frontmatter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter).
 
@@ -78,7 +76,7 @@ Example:
 }
 ```
 
-If a file doesn't specify a template, its data is available to be used in the ContentTree but will not be rendered.
+*If a file doesn't specify a template, its data is available to be used in the ContentTree but will not be rendered.
 
 #### filepath
 By default, the path of the page is its directory structure.
@@ -119,12 +117,12 @@ By default, a file without a `date` specified will have the `date` value of when
 See [momentjs](http://momentjs.com) for more information about the date format.
 
 ## Templates
-*This section explains the inner working of the [`handlebars_html` Grunt task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-handlebars-html.js).*
+*This section explains the inner working of the [`handlebars_html` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-handlebars-html.js).*
 
 By default tobiko uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
 *Note: true to a static site generator, all compiled templates need to be in `.html` formats*
 
-Helpers and Partials are supported. They can be stored under `helpers` and `partials` directories under `templates`. These directory names of course can be changed in `Gruntfile.js`.
+Helpers and Partials are supported. They can be stored under `helpers` and `partials` directories under `templates`. These directory names of course can be changed in tobiko's `config.json`.
 
 Each page needs to specify its own template. This can be done with a JSON property
 ```js
@@ -156,7 +154,7 @@ Each object in the `paginate` option represents a directory to be paginated. The
 * `title`: (string) title of these archive pages (this will be made available to use in template as `content.title`)
 
 #### Template
-The posts in each archive page is accessible in the template file under `content` property, similar to a regular file. See [example](https://github.com/tnguyen14/tobiko/blob/master/example/templates/archive.hbs).
+The `posts` in each archive page is accessible in the template file under `content` property, similar to a regular file. See [example](https://github.com/tnguyen14/tobiko-example/blob/master/example/templates/archive.hbs).
 
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
