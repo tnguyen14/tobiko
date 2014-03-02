@@ -1,13 +1,13 @@
 {
-  "name": "cbtallc2",
-  "version": "0.0.2",
+  "name": "tobiko",
+  "version": "0.1.0",
   "author": "Tri Nguyen",
   "respository": {
     "type": "git",
-    "url": "git://github.com/tnguyen14/cbtallc"
+    "url": "git://github.com/tnguyen14/tobiko"
   },
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.10.0"
   },
   "dependencies": {
     "handlebars": "~1.0.12",
@@ -17,14 +17,18 @@
     "underscore": "~1.5.1"
   },
   "devDependencies": {
-    "grunt": "~0.4.1",
+   "grunt": "~0.4.1",
     "grunt-contrib-compass": "~0.3.0",
-    "grunt-contrib-connect": "~0.3.0",
-    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-connect": "~0.7.0",
+    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-requirejs": "~0.4.1",
-    "grunt-contrib-sass": "~0.4.1",
-    "grunt-contrib-watch": "~0.4.4",
-    "grunt-gh-pages": "~0.6.0",
-    "matchdep": "~0.1.2"
+    "grunt-contrib-sass": "~0.7.0",
+    "grunt-contrib-watch": "~0.5.0",
+    "grunt-gh-pages": "~0.9.0",
+    "grunt-autoprefixer": "~0.6.0",
+    "grunt-csso": "~0.5.0",
+    "grunt-responsive-images": "~0.1.0",
+    "grunt-contrib-imagemin": "~0.5.0",
+    "grunt-newer": "~0.5.4",
   }
 }
