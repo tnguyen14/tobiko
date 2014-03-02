@@ -1,12 +1,12 @@
 module.exports = {
 	options : {
-		partialDir : 'templates/partials',
-		helperDir : 'templates/helpers'
+		partialDir : '<%= templates.partialDir %>',
+		helperDir : '<%= templates.helperDir %>'
 	},
 	dev: {
-		src: 'templates/*.hbs',
+		src: '<%= templates.dir %>/*.hbs',
 		dest: '<%= buildPath %>',
-		data: 'build/data.json',
+		data: '<%= dataPath %>',
 	},
 	prod: '<%= handlebars_html.dev %>'
 }

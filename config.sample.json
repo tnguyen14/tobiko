@@ -2,5 +2,11 @@
 	"port": 4000,
 	"livereload": 35730,
 	"buildPath": "build/www",
-	"contentDir": "contents"
+	"contentDir": "contents",
+	"dataPath": "build/data.json",
+	"templates": {
+		"dir": "templates",
+		"partialDir": "templates/partials",
+		"helperDir": "templates/helpers"
+	}
 }
