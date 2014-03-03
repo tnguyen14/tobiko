@@ -7,15 +7,15 @@ module.exports = {
 		tasks: ['sass:dev', 'autoprefixer:dev']
 	},
 	contents: {
-		files: ['contents/**/*.{json,md}'],
+		files: ['<%= contentDir %>/**/*.{json,md}'],
 		tasks: ['import_contents', 'handlebars_html:dev']
 	},
 	templates: {
-		files: ['templates/**/*.{hbs,html}'],
+		files: ['<%= templates.dir %>/**/*.{hbs,html}'],
 		tasks: ['handlebars_html:dev']
 	},
 	images: {
-		files: ['contents/**/*.{jpg,png,gif}'],
+		files: ['<%= contentDir %>/**/*.{jpg,png,gif}'],
 		tasks: ['newer:imagemin:dev', 'newer:responsive_images']
 	},
 	assets: {

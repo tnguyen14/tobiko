@@ -10,7 +10,7 @@ module.exports = {
 			}]
 		},
 		files: [
-			{expand: true, cwd: 'contents', src: ['**/*.{jpg,png}'], dest: '<%= buildPath %>'}
+			{expand: true, cwd: '<%= contentDir %>', src: ['**/*.{jpg,png}'], dest: '<%= buildPath %>'}
 		]
 	}
 }
