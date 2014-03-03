@@ -65,7 +65,7 @@ And `cars` are also available as
 ```html
   <ul>
   {{#each cars}}
-  	<li><h2>{{title}}</h2></li>
+    <li><h2>{{title}}</h2></li>
   {{/each}}
   </ul>
 
@@ -80,7 +80,7 @@ Each page specifies a template that it uses, either as a JSON property or YAML f
 Example:
 ```js
 {
-	template: "index.hbs"
+  template: "index.hbs"
 }
 ```
 
@@ -94,7 +94,7 @@ However, each page's path can be overwritten by a `filepath` property.
 Example:
 ```js
 {
-	filepath: "articles/archives/some-post.md"
+  filepath: "articles/archives/some-post.md"
 }
 ```
 

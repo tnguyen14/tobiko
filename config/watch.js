@@ -22,8 +22,8 @@ module.exports = {
 		files: ['sass/assets/'],
 		tasks: ['copy:build']
 	},
-	grunt: {
-		files: ['tasks/**/*.js', 'grunt/**/*.{js,yaml}', 'Gruntfile.js'],
+	tobiko: {
+		files: ['tobiko/**/*.{js,yaml}', 'Gruntfile.js'],
 		tasks: ['process']
 	}
 }

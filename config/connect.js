@@ -3,7 +3,8 @@ module.exports = function(grunt){
 		dev: {
 			options: {
 				port: '<%= port %>',
-				base: ['<%= buildPath %>', '.']
+				base: ['<%= buildPath %>', '.'],
+				livereload: '<%= livereload %>'
 			}
 		},
 		prod: {
