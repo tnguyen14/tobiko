@@ -1,7 +1,7 @@
 module.exports = {
 	build: {
 		files: [
-			{expand: true, cwd: 'sass', src: 'assets/**/*', dest: '<%= buildPath %>/css/'}
+			{"expand": true, "cwd": "<%= sassDir %>", "src": "assets/**/*", "dest": "<%= buildPath %>/css/"}
 		]
 	}
 }

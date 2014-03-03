@@ -18,8 +18,8 @@ module.exports = {
 		files: ['<%= contentDir %>/**/*.{jpg,png,gif}'],
 		tasks: ['newer:imagemin:dev', 'newer:responsive_images']
 	},
-	copy: {
-		files: '<%= copy %>',
+	assets: {
+		files: ['<%= sassDir %>/assets'],
 		tasks: ['copy:build']
 	},
 	tobiko: {
