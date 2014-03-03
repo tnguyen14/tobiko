@@ -17,8 +17,5 @@
 			"template": "archive.hbs",
 			"title": "Posts"
 		}
-	],
-	"copySrc": [
-		{"expand": true, "cwd": "<%= sassDir %>", "src": "assets/**/*", "dest": "<%= buildPath %>/css/"}
 	]
 }

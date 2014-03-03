@@ -12,7 +12,7 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
     ```sh
     git subtree add --prefix=tobiko --squash git@github.com:tnguyen14/tobiko.git master
     # create new tobiko config
-    cp tobshiko/config.sample.json tobiko/config.json
+    cp tobshiko/tobiko.sample.json tobiko.json
     ```
 3. Install bower dependencies. If you don't have bower, [install it first](http://bower.io/).
     ```sh
@@ -30,7 +30,7 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
 ## Contents
 *This section explains the inner working of the [`import_contents` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
 
-By default, the site content will be in the `contents` folder. This option could be changed in tobiko's `config.json`, under `contentDir` property.
+By default, the site content will be in the `contents` folder. This option could be changed in `tobiko.json`, under `contentDir` property.
 
 Content can be written in `json` and `markdown` with `yaml` [frontmatter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter).
 
@@ -130,7 +130,7 @@ See [momentjs](http://momentjs.com) for more information about the date format.
 By default tobiko uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
 *Note: true to a static site generator, all compiled templates need to be in `.html` formats*
 
-Helpers and Partials are supported. They can be stored under `helpers` and `partials` directories under `templates`. These directory names of course can be changed in tobiko's `config.json`.
+Helpers and Partials are supported. They can be stored under `helpers` and `partials` directories under `templates`. These directory names of course can be changed in `tobiko.json`.
 
 Each page needs to specify its own template. This can be done with a JSON property
 ```js
@@ -142,7 +142,7 @@ A file's content is available in the template under the `content` variable. Othe
 
 ### Pagination and Archives
 A directory with a big number of posts could be configured to paginate. The paginated pages are called archives.
-The option for enabling pagination can be added in tobiko's `config.json`. For example:
+The option for enabling pagination can be added in `tobiko.json`. For example:
 ```js
   "paginate": [
     {
