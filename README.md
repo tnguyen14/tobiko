@@ -10,7 +10,8 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
     ```
 2. Install tobiko as a subtree.
     ```sh
-    git subtree add --prefix=tobiko --squash git@github.com:tnguyen14/tobiko.git master
+    git remote add tobiko git@github.com:tnguyen14/tobiko.git
+    git subtree add --squash --prefix=tobiko tobiko  master
     # create new tobiko config
     cp tobshiko/tobiko.sample.json tobiko.json
     ```
@@ -26,6 +27,12 @@ This generator app is driven by [grunt.js](http://gruntjs.com), which means that
     ```sh
     grunt
     ```
+
+### Updates
+New updates from tobiko can be pulled from upstream using this command
+```sh
+git subtree pull --prefix tobiko tobiko master
+```
 
 ## Contents
 *This section explains the inner working of the [`import_contents` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
@@ -213,6 +220,28 @@ Optionally, you can also deploy your site to a server of your choice using the [
     }
   });
 ```
+
+## Contributing
+If you're using tobiko as a subtree (as in the Usage guide), you can make changes to your tobiko and submit them as following:
+
+1. Make your own fork of tobiko
+2. Add that fork as a remote
+    ```sh
+    git add remote yourname-tobiko your-forked-github-repo
+    ```
+3. Push the changes
+    ```sh
+    git subtree push --prefix tobiko yourname-tobiko master
+    ```
+    Alternatively, you can also create a new branches for the changes so as to keep receiving updates
+    ```sh
+    git subtree split --prefix tobiko --branch fixes
+    git push yourname-tobiko fixes
+
+    # You can still do this meanwhile to get updates
+    git subtree pull --prefix tobiko tobiko master
+    ```
+4. Create a pull request
 
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
