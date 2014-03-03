@@ -5,7 +5,7 @@ module.exports = {
 			sourcemap: true
 		},
 		files: {
-			'<%= buildPath %>/css/main.css': 'sass/main.scss'
+			'<%= buildPath %>/css/main.css': '<%= sassDir %>/main.scss'
 		}
 	},
 	prod: {
@@ -13,7 +13,7 @@ module.exports = {
 			style: 'compressed'
 		},
 		files: {
-			'<%= buildPath %>/css/main.css': 'sass/main.scss'
+			'<%= buildPath %>/css/main.css': '<%= sassDir %>/main.scss'
 		}
 	}
 }

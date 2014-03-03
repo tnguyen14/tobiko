@@ -3,7 +3,7 @@ module.exports = {
 		options: {
 			baseUrl: '.',
 			mainConfigFile: 'js/config.js',
-			name: 'components/almond/almond',
+			name: 'bower_components/almond/almond',
 			insertRequire: ['js/app'],
 			out: '<%= buildPath %>/app.js',
 			optimize: 'uglify2',

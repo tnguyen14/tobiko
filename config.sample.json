@@ -4,6 +4,7 @@
 	"buildPath": "build/www",
 	"contentDir": "contents",
 	"dataPath": "build/data.json",
+	"sassDir": "sass",
 	"templates": {
 		"dir": "templates",
 		"partialDir": "templates/partials",

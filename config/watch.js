@@ -3,7 +3,7 @@ module.exports = {
 		livereload: '<%= livereload %>' || 35729
 	},
 	css: {
-		files: ['sass/**/*.scss'],
+		files: ['<%= sassDir %>/**/*.scss'],
 		tasks: ['sass:dev', 'autoprefixer:dev']
 	},
 	contents: {
@@ -19,7 +19,7 @@ module.exports = {
 		tasks: ['newer:imagemin:dev', 'newer:responsive_images']
 	},
 	assets: {
-		files: ['sass/assets/'],
+		files: ['<%= sassDir %>/assets/'],
 		tasks: ['copy:build']
 	},
 	tobiko: {

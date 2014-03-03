@@ -7,7 +7,7 @@ module.exports = {
 	},
 	dev: {
 		files: [
-			{expand: true, cwd: 'contents', src: '**/*.{jpg,png,gif}', dest: 'contents'}
+			{expand: true, cwd: '<%= contentDir %>', src: '**/*.{jpg,png,gif}', dest: 'contents'}
 		]
 	}
 }
