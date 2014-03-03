@@ -18,10 +18,6 @@ module.exports = {
 		files: ['<%= contentDir %>/**/*.{jpg,png,gif}'],
 		tasks: ['newer:imagemin:dev', 'newer:responsive_images']
 	},
-	assets: {
-		files: ['<%= sassDir %>/assets/'],
-		tasks: ['copy:build']
-	},
 	tobiko: {
 		files: ['tobiko/**/*.{js,yaml}', 'Gruntfile.js'],
 		tasks: ['process']
