@@ -70,7 +70,7 @@ module.exports = function (grunt) {
 				if (!filecontent.filepath) {
 					filecontent.filepath = relpath;
 				}
-				filecontent.url = '/' + path.dirname(relpath);
+				filecontent.url = '/' + path.dirname(filecontent.filepath);
 
 				// add full path for images
 				var image = /<img src=\"(.*\.(jpg|png))\"/g;
