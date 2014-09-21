@@ -2,6 +2,7 @@
   "name": "grunt-tobiko",
   "version": "1.0.0",
   "author": "Tri Nguyen",
+  "description": "the grunt plugin that powers tobiko static site generator",
   "respository": {
     "type": "git",
     "url": "git://github.com/tnguyen14/tobiko"
