@@ -21,26 +21,6 @@ exports.init = function (grunt) {
 		return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
 	};
 
-	// convert an object of objects into array of objects
-	// @param {Object}
-	// @return {Array}
-	var objToArray = function(obj) {
-		var array = [];
-		_(obj).forEach(function(value, key) {
-			var el = {};
-			// if we're not at the post level yet, go deeper
-			if (!value.hasOwnProperty('template')) {
-				for (var prop in value) {
-					el[key] = value[prop];
-				}
-			} else {
-				el[key] = value;
-			}
-			array.push(el);
-		});
-		return array;
-	};
-
 	// sort array by keys
 	// default to date
 	var sortArrayByKey = function(array, key) {
@@ -171,8 +151,19 @@ exports.init = function (grunt) {
 			title = options.title,
 			orderBy = options.orderby;
 
-		// convert content to array to calculate length
-		posts = objToArray(dir);
+		// get all the posts (content file with `template` declared)
+		function getPosts(dir) {
+			return _(dir).map(function (value, key) {
+				// if we're not at the post level yet, go deeper
+				if (!value.hasOwnProperty('template')) {
+					return getPosts(value);
+				} else {
+					return value;
+				}
+			});
+		};
+		// flatten all posts nesting
+		posts = _.flatten(getPosts(dir));
 
 		// sorting
 		sortArrayByKey(posts, orderBy);
@@ -187,8 +178,8 @@ exports.init = function (grunt) {
 			archivePage.template = template;
 			// a title as well
 			archivePage.title = title;
-			// initialize empty posts object
-			archivePage.posts = {};
+			// initialize empty posts array
+			archivePage.posts = [];
 			// add correct filepath
 			archivePage.filepath = path.join(key, pageNum.toString(), 'index.html');
 			archivePage.url = path.join('/', key, pageNum.toString());
@@ -205,7 +196,7 @@ exports.init = function (grunt) {
 		for (var i = 0; i < posts.length; i++){
 			var pageNum = Math.ceil((i+1)/ postPerPage);
 			var archivePage = archive[pageNum]['index.html'];
-			_.extend(archivePage['posts'], posts[i]);
+			archivePage['posts'].push(posts[i]);
 		}
 
 		// simplify filepath for archive 1
