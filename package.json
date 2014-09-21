@@ -1,12 +1,18 @@
 {
   "name": "grunt-tobiko",
   "version": "1.0.0",
-  "author": "Tri Nguyen",
-  "description": "the grunt plugin that powers tobiko static site generator",
-  "respository": {
-    "type": "git",
-    "url": "git://github.com/tnguyen14/tobiko"
+  "author": {
+    "name": "Tri Nguyen",
+    "email": "tri@tridnguyen.com",
+    "url": "https://github.com/tnguyen14"
   },
+  "description": "the grunt plugin that powers tobiko static site generator",
+  "keywords": [
+    "static site generator",
+    "tobiko",
+    "grunt"
+  ],
+  "respository": "tnguyen14/tobiko",
   "engines": {
     "node": ">= 0.10.0"
   },
