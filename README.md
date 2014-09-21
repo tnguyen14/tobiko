@@ -142,7 +142,7 @@ By default, a file without a `date` specified will have the `date` value of when
 See [momentjs](http://momentjs.com) for more information about the date format.
 
 ## Templates
-*This section explains the inner working of the [`handlebars_html` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-handlebars-html.js).*
+*This section explains the inner working of the [`generate_html` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-handlebars-html.js).*
 
 By default tobiko uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
 *Note: true to a static site generator, all compiled templates need to be in `.html` formats*

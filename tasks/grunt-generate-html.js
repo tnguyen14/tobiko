@@ -23,7 +23,7 @@ module.exports = function (grunt) {
 		env = grunt.task.current.target;
 
 	// Grunt task!
-	grunt.registerMultiTask('handlebars_html', 'write templates to html', function () {
+	grunt.registerMultiTask('generate_html', 'write templates to html', function () {
 		var options = this.options({
 			partialDir: 'app/templates/partials',
 			helperDir: 'app/templates/helpers'
