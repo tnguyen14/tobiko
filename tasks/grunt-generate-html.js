@@ -7,7 +7,6 @@
 module.exports = function (grunt) {
 	var fs = require('fs'),
 		path = require('path'),
-		moment = require('moment'),
 		Handlebars = require('handlebars'),
 		_ = grunt.util._;
 
