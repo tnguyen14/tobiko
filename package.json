@@ -1,6 +1,6 @@
 {
-  "name": "tobiko",
-  "version": "0.1.0",
+  "name": "grunt-tobiko",
+  "version": "1.0.0",
   "author": "Tri Nguyen",
   "respository": {
     "type": "git",

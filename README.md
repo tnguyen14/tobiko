@@ -239,7 +239,7 @@ If you're using tobiko as a subtree (as in the Usage guide), you can make change
     git push yourname-tobiko fixes
 
     # You can still do this meanwhile to get updates
-    git subtree pull --prefix tobiko tobiko master
+    git subtree pull --prefix tobiko tobiko master --squash
     ```
 4. Create a pull request
 
