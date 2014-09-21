@@ -85,7 +85,7 @@ exports.init = function (grunt) {
 	// Parse JSON and markdown content
 	exports.parse = function(filepath, options) {
 		var ext = path.extname(filepath),
-			basename = path.basename(filepath),
+			basename = path.basename(filepath, ext),
 			// remove 'contents' from path
 			content;
 
@@ -145,6 +145,10 @@ exports.init = function (grunt) {
 					grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
 				}
 			}
+
+			// add file name and extension
+			content.filename = basename;
+			content.fileext = ext;
 
 			// // add full path for images
 			// var image = /<img src=\"(.*\.jpg|png)\"/;
