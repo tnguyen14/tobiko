@@ -16,22 +16,20 @@ module.exports = function (grunt) {
 		green = '\u001b[32m',
 		reset = '\u001b[0m';
 
-	// site config
-	var config = grunt.file.readJSON('./config.json'),
-		config_dev = (grunt.file.exists('./config-dev.json')) ? grunt.file.readJSON('./config-dev.json') : {},
-		env = grunt.task.current.target;
 
 	// Grunt task!
 	grunt.registerMultiTask('generate_html', 'write templates to html', function () {
 		var options = this.options({
 			partialDir: 'app/templates/partials',
 			helperDir: 'app/templates/helpers'
-		}),
-			env = this.target;
+		});
+		var env = this.target;
+		// site config
+		var config = grunt.file.readJSON('./config.json');
 
-		// config_dev will overwrite config in dev
-		if (env === 'dev') {
-			_.extend(config, config_dev);
+		// environment specific config
+		if (grunt.file.exists('./config.' + env + '.json')) {
+			_.extend(config, grunt.file.readJSON('./config.' + env + '.json'));
 		}
 
 		// register helpers
