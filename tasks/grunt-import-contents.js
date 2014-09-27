@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 			.forEach(function (filepath) {
 				var dirname = path.dirname(filepath),
 					directories = dirname.split(path.sep),
-					basename = path.basename(filepath),
+					basename = path.basename(filepath, path.extname(filepath)),
 					relpath = path.relative(options.baseDir, filepath),
 					filecontent = {};
 
