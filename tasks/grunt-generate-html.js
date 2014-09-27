@@ -40,8 +40,7 @@ module.exports = function (grunt) {
 			var helpers = fs.readdirSync(options.helperDir);
 			// register helper with their filename as helper name
 			helpers.forEach(function (h) {
-				var ext = path.extname(h),
-					basename = path.basename(h, ext),
+				var basename = path.basename(h, path.extname(h)),
 					filepath = path.resolve(options.helperDir, h);
 				Handlebars.registerHelper(basename, require(filepath));
 			});
@@ -53,8 +52,7 @@ module.exports = function (grunt) {
 			var partials = fs.readdirSync(options.partialDir);
 			// register helper with their filename as helper name
 			partials.forEach(function (p) {
-				var ext = path.extname(p),
-					basename = path.basename(p, ext),
+				var basename = path.basename(p, path.extname(p)),
 					filepath = path.resolve(options.partialDir, p),
 					partial = grunt.file.read(filepath);
 				Handlebars.registerPartial(basename, partial);
@@ -100,9 +98,8 @@ module.exports = function (grunt) {
 							// if a filepath is specified, use that instead (it should be after contents are imported)
 							// otherwise, use filename as path
 							var filepath = (content.filepath) ? content.filepath : key;
-							var ext = path.extname(filepath),
-								dirname = path.dirname(filepath),
-								basename = path.basename(filepath, ext);
+							var dirname = path.dirname(filepath),
+								basename = path.basename(filepath, path.extname(filepath));
 
 							// remove the dot in dirname, add the trailing slash where appropriate
 							if (dirname === '.') {
