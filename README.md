@@ -1,64 +1,94 @@
 # tobiko
-### node.js static site generator using grunt
+> a grunt plugin that powers the tobiko static site generator
+
+This project is known on npm as [grunt-tobiko](https://npmjs.org/package/grunt-tobiko). It is named tobiko here for legacy reason.
 
 ## How to use
-This generator app is driven by [grunt.js](http://gruntjs.com), which means that it is highly customizable to suit your developer needs. An example of how this generator can be seen at [tobiko-example](https://github.com/tnguyen14/tobiko-example).
+This is a grunt plugin that powers a static site generator. You can use the static site generator to power your website or blog using [generator-tobiko](http://github.com/tnguyen14/generator-tobiko).
 
-1. To get a basic site
-
+1. To get started, install [yeoman](http://yeoman.io) and the generator plugin.
     ```sh
-    git clone git@github.com:tnguyen14/tobiko-example.git
-    ```
-2. Install tobiko as a subtree.
-
-    ```sh
-    git remote add tobiko git@github.com:tnguyen14/tobiko.git
-    git fetch tobiko
-    git checkout -b tobiko tobiko/master
-    git read-tree --prefix=tobiko/ -u tobiko
-    # create new tobiko config
-    cp tobshiko/tobiko.sample.json tobiko.json
-    ```
-3. Install bower dependencies. If you don't have bower, [install it first](http://bower.io/).
-
-    ```sh
-    bower install
-    ```
-4. Install npm dependencies. If you don't have npm or node, [install it first](http://nodejs.org).
-
-    ```sh
-    npm install
-    ```
-5. Write code! If you don't have `grunt-cli`, install that first with `npm install -g grunt-cli`.
-
-    ```sh
-    grunt
+    $ npm install -g yo generator-tobiko
     ```
 
-### Updates
-New updates from tobiko can be pulled from upstream using these commands
-```sh
-git checkout tobiko
-git pull
-git checkout master
-git merge --squash -s subtree --no-commit tobiko
-```
+2. Start to scaffold your new website
+    ```sh
+    $ mkdir newsite
+    $ cd newsite
+    $ yo tobiko
+    ```
 
-## Contents
+3. Answer the prompt and create your new site. Even though the generator is designed to be as flexible as possible, if you are using this for the first time, sticking to the default configs will make the most sense. All the examples and documentation are written based on that structure. See [project configurations](#project-configurations).
+
+4. Start developing it locally
+    ```sh
+    $ grunt
+    ```
+You can also deploy it to Github pages. Other [methods of deployment](#deployment) are also available.
+    ```sh
+    $ grunt deploy
+    ```
+
+## Stack
+- Build process: grunt
+- Content: JSON / Markdown (optionally with YAML frontmatter)
+- Template: Handlebars
+- Styles: SCSS
+- JavaScript: RequireJS (AMD)
+
+There are plans to support browserify (CommonJS) and a gulp build system in the future.
+
+## Project configurations
+Below are the default configuations used by the static site generator and they can be configured easily. When using generator-tobiko, you will be prompted to enter these values.
+
+- Contents directory: `contents`
+- Template directory: `templates`
+  - Partial directory: `templates/partials`
+  - Helper directory: `templates/helpers`
+- Sass directory: `scss`
+- JavaScript directory: `js`
+- Build directory: `build`
+- localhost port: `4000`
+- livereload port: `35730`
+
+## Documentation
+
+### Contents
 *This section explains the inner working of the [`import_contents` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-import-contents.js).*
 
 By default, the site content will be in the `contents` folder. This option could be changed in `tobiko.json`, under `contentDir` property.
 
 Content can be written in `json` and `markdown` with `yaml` [frontmatter](https://github.com/mojombo/jekyll/wiki/YAML-Front-Matter).
 
-All contents are written to `data.json` in the `build` directory.
-The structure of the `contents` directory will be reflected in the final static directory.
+The structure of the `contents` directory will be reflected in the final static HTML output.
+
+All contents are written to `data.json` in the `build` directory (allows for inspection/ debugging).
 
 #### config.json
-High level, site-wide configurations can be specified in `config.json` in the root folder.
+High level, site-wide configurations can be specified in `config.json` in the root folder. Environment-specific configurations are also supported.
+
+For example:
+
+config.json
+```json
+{
+    "site-name": "Tobiko Example",
+    "site-url": "http://tobiko.io",
+    "author": "Sushi Connoisseur"
+}
+```
+
+config.dev.json
+```json
+{
+    "site-url": "http://localhost:4000",
+}
+```
+
+Environment-specific settings cascade over the original config. This allows you to declare only the different parameters.
 
 #### Nesting
-In any directory, a file's sibling files and directories are available in the template to access. This is a convenient and structural way to store and organize data, instead of dumping everything into a JSON file.
+In any directory, a file's sibling files and directories are available for the template to access. This is a convenient and structural way to store and organize data, instead of dumping everything into a single JSON file.
 
 For example, for this file structure
 ```
@@ -87,21 +117,32 @@ And `cars` are also available as
   </ul>
 
   <div class="spoiler">
-   {{cars.accessories["spoiler.json"]}}
+    {{cars.accessories.spoiler}}
   </div>
 ```
 
-#### template
-Each page specifies a template that it uses, either as a JSON property or YAML frontmmatter.
+The numbered files are used to organize the order of the children.
+
+#### template property
+Each page specifies a template that it uses, either as a JSON property or YAML frontmmatter. If a file doesn't specify a template, its data is available to be used in the ContentTree but will not be rendered.
 
 Example:
+
+main.json
 ```js
 {
-  template: "index.hbs"
+  template: "index.hbs",
+  content: "Hello World"
 }
 ```
 
-*If a file doesn't specify a template, its data is available to be used in the ContentTree but will not be rendered.
+index.md
+```md
+---
+template: index.hbs
+---
+Hello World
+```
 
 #### filepath
 By default, the path of the page is its directory structure.
@@ -141,8 +182,8 @@ By default, a file without a `date` specified will have the `date` value of when
 
 See [momentjs](http://momentjs.com) for more information about the date format.
 
-## Templates
-*This section explains the inner working of the [`generate_html` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-handlebars-html.js).*
+### Templates
+*This section explains the inner working of the [`generate_html` task](https://github.com/tnguyen14/tobiko/blob/master/tasks/grunt-generate-html.js).*
 
 By default tobiko uses [Handlebars](http://handlebarsjs.com) as its templating engine. However, if you want to use a different templating engine, you can easily do so by plugging in a different `grunt` task that would compile your templating engine of choice.
 *Note: true to a static site generator, all compiled templates need to be in `.html` formats*
@@ -157,7 +198,7 @@ or in the YAML frontmatter. A file with no `template` property will not be rende
 
 A file's content is available in the template under the `content` variable. Other sub-directories included in the same directory is accessible in the template with [nesting](#nesting).
 
-### Pagination and Archives
+#### Pagination and Archives
 A directory with a big number of posts could be configured to paginate. The paginated pages are called archives.
 The option for enabling pagination can be added in `tobiko.json`. For example:
 ```js
@@ -180,7 +221,7 @@ Each object in the `paginate` option represents a directory to be paginated. The
 #### Template
 The `posts` in each archive page is accessible in the template file under `content` property, similar to a regular file. See [example](https://github.com/tnguyen14/tobiko-example/blob/master/example/templates/archive.hbs).
 
-## Grunt tasks
+### Grunt tasks
 Thanks to [grunt-load-config](https://github.com/firstandthird/load-grunt-config/), the grunt task configs are neatly organized under the [`config`](https://github.com/tnguyen14/tobiko/tree/master/config) directory.
 
 A few [tasks](https://github.com/tnguyen14/tobiko/blob/master/config/aliases.yaml) are made available below. The default is `dev`.
@@ -230,33 +271,6 @@ Optionally, you can also deploy your site to a server of your choice using the [
     }
   });
 ```
-
-## Contributing
-If you're using tobiko as a subtree (as in the Usage guide), you can make changes to your tobiko and submit them as following:
-
-1. Make your own fork of tobiko
-2. Add that fork as a remote
-
-    ```sh
-    git add remote yourname-tobiko your-forked-github-repo
-    ```
-3. Checkout the `tobiko` branch, add your changes
-
-    ```sh
-    git checkout tobiko
-    # do your changes
-    # commit them
-    ```
-4. Push the changes
-
-    ```sh
-    git subtree split --prefix tobiko --branch fixes
-    git push yourname-tobiko fixes
-
-    # You can still do this meanwhile to get updates
-    git subtree pull --prefix tobiko tobiko master --squash
-    ```
-4. Create a pull request from your fork to this repo.
 
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
