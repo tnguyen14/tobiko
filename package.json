@@ -1,6 +1,6 @@
 {
   "name": "grunt-tobiko",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": {
     "name": "Tri Nguyen",
     "email": "tri@tridnguyen.com",
@@ -12,7 +12,7 @@
     "tobiko",
     "grunt"
   ],
-  "respository": "tnguyen14/tobiko",
+  "repository": "tnguyen14/tobiko",
   "engines": {
     "node": ">= 0.10.0"
   },
