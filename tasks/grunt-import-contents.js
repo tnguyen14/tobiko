@@ -4,11 +4,11 @@
 'use strict';
 
 var contentParse = require('./lib/contentParse');
+var paginate = require('./lib/paginate');
 
 module.exports = function (grunt) {
 	var path = require('path');
 	var _ = grunt.util._;
-	var content = require('./lib/content').init();
 
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var options = this.options({
@@ -91,7 +91,7 @@ module.exports = function (grunt) {
 				// only support archive at top level
 				_(contentTree.contents).forEach(function(dir, key) {
 					if ( paginateOptions.hasOwnProperty(key) ) {
-						var archive = content.paginate(dir, key, paginateOptions[key]);
+						var archive = paginate(dir, key, paginateOptions[key]);
 
 						// make the first page of archive available at top level
 						if (archive['1']) {

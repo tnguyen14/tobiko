@@ -7,6 +7,17 @@ var jsYAML = require('js-yaml');
 var moment = require('moment');
 var marked = require('marked');
 
+/* convert new line characters to html linebreaks
+ * inspired by nl2br function from php.js
+ * https://github.com/kvz/phpjs/blob/master/functions/strings/nl2br.js
+ * @param {String} str
+ * @return {String}
+*/
+var nl2br = function(str) {
+	return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>');
+};
+
+
 // Parse JSON and markdown content
 module.exports = function(filepath, options) {
 	var ext = path.extname(filepath),
