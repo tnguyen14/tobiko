@@ -4,9 +4,16 @@ var test = require('tape');
 var parse = require('../tasks/lib/parse');
 var moment = require('moment');
 
+var fixtures = {
+	json: 'test/fixtures/foo.json',
+	md: 'test/fixtures/baz.md',
+	draftUnderscore: 'test/fixtures/_draft.json',
+	draftDot: 'test/fixtures/.draft.md'
+};
+
 test('parse JSON file', function(t) {
 	t.plan(5);
-	var foo = parse('test/example/foo.json');
+	var foo = parse(fixtures.json);
 	t.equal(foo.title, 'Foo', 'File content has title "Foo"');
 	t.equal(foo.filename, 'foo', 'File name is "foo"');
 	t.equal(foo.fileext, '.json', 'File extension is ".json"');
@@ -16,7 +23,7 @@ test('parse JSON file', function(t) {
 
 test('parse MD file', function(t) {
 	t.plan(6);
-	var baz = parse('test/example/baz.md');
+	var baz = parse(fixtures.md);
 	t.equal(baz.title, 'Baz', 'File title is "Baz"');
 	t.equal(baz.main, '<p>This is an example paragraph.</p>\n', 'Markdown file content');
 	t.equal(baz.filename, 'baz', 'File name is "baz"');
@@ -27,8 +34,8 @@ test('parse MD file', function(t) {
 
 test('should ignore draft files', function(t) {
 	t.plan(2);
-	var draftJson = parse('test/example/_draft.json');
-	t.notOk(draftJson, 'File with leading _ should be ignored');
-	var draftMd = parse('test/example/.draft.md');
-	t.notOk(draftMd, 'File with leading . should be ignored');
+	var draftUnderscore = parse(fixtures.draftUnderscore);
+	t.notOk(draftUnderscore, 'File with leading _ should be ignored');
+	var draftDot = parse(fixtures.draftDot);
+	t.notOk(draftDot, 'File with leading . should be ignored');
 });

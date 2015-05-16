@@ -8,10 +8,8 @@ var _ = require('lodash');
 // default to date
 var sortArrayByKey = function(array, key) {
 	array.sort(function(a,b) {
-		var sortKey = (key) ? key : 'date',
-			aKey,
-			bKey,
-			compareResult;
+		var sortKey = (key) ? key : 'date';
+		var aKey, bKey, compareResult;
 
 		if (a.hasOwnProperty(sortKey)) {
 			aKey = a[sortKey];

@@ -1,15 +1,15 @@
-/* get all data contents
+/**
+ * get all data contents
  * store them as a humongous JSON file
  */
 'use strict';
 
+var path = require('path');
 var parse = require('./lib/parse');
 var paginate = require('./lib/paginate');
+var _ = require('lodash');
 
 module.exports = function (grunt) {
-	var path = require('path');
-	var _ = grunt.util._;
-
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var options = this.options({
 			baseDir: 'contents',
