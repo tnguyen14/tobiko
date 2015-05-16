@@ -4,32 +4,10 @@
 'use strict';
 
 module.exports = function (grunt) {
-	var fs = require('fs'),
-		path = require('path'),
-		_ = grunt.util._,
-		content = require('./lib/content').init(grunt);
-
-	// log colors
-	var red   = '\u001b[31m',
-		blue  = '\u001b[34m',
-		green = '\u001b[32m',
-		reset = '\u001b[0m';
-
-	// inspired from grunt.file.recurse function https://github.com/gruntjs/grunt/blob/master/lib/grunt/file.js
-	/*
-	var getDataRecurse = function(rootdir, data, subdir) {
-		var abspath = subdir ? path.join(rootdir, subdir) : rootdir;
-		fs.readdirSync(abspath).forEach(function(filename){
-			var filepath = path.join(abspath, filename);
-			if (fs.statSync(filepath).isDirectory()) {
-				data[filename] = {};
-				getDataRecurse(rootdir, data[filename], path.join(subdir || '', filename || ''));
-			} else {
-				data[filename] = content.parse(filepath);
-			}
-		});
-	};
-	*/
+	var fs = require('fs');
+	var path = require('path');
+	var _ = grunt.util._;
+	var content = require('./lib/content').init(grunt);
 
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var options = this.options({

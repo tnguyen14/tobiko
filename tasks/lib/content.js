@@ -102,9 +102,7 @@ exports.init = function (grunt) {
 				// convert new line characters to html line breaks
 				// markdown = nl2br(markdown);
 
-				content['main'] = markdown;
-				// content['content'] = '';
-
+				content.main = markdown;
 			} catch (e) {
 				grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
 			}
@@ -112,7 +110,7 @@ exports.init = function (grunt) {
 
 		if (content) {
 			// add support for date using moment.js http://momentjs.com/
-			if(!content.date) {
+			if (!content.date) {
 				content.date = fs.statSync(filepath).ctime;
 			}
 			// if date isn't already a moment type, convert it to momentjs
