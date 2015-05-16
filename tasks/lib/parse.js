@@ -19,7 +19,7 @@ var nl2br = function(str) {
 
 
 // Parse JSON and markdown content
-module.exports = function(filepath, options) {
+module.exports = function(filepath, markdownOptions) {
 	var ext = path.extname(filepath);
 	var basename = path.basename(filepath, ext);
 	var content;
@@ -39,8 +39,8 @@ module.exports = function(filepath, options) {
 		var fileContent = grunt.file.read(filepath);
 
 		// set options for marked
-		if (options && options.markdown) {
-			marked.setOptions(options.markdown);
+		if (markdownOptions) {
+			marked.setOptions(markdownOptions);
 		}
 
 		try {
