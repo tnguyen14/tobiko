@@ -16,14 +16,14 @@ var fixtures = {
 test('parse JSON file', function(t) {
 	t.plan(1);
 	var foo = parse(fixtures.json);
-	t.equal(foo.title, 'Foo', 'File content has title "Foo"');
+	t.equal(foo.title, 'Foo', 'File content');
 });
 
 test('parse MD file', function(t) {
 	t.plan(2);
 	var baz = parse(fixtures.md);
-	t.equal(baz.title, 'Baz', 'File title is "Baz"');
-	t.equal(baz.main, '<p>This is an example paragraph.</p>\n', 'Markdown file content');
+	t.equal(baz.title, 'Baz', 'File content');
+	t.equal(baz.main, '<p>This is an example paragraph.</p>\n', 'File content markdown');
 });
 
 test('should ignore draft files', function(t) {
@@ -37,12 +37,13 @@ test('should ignore draft files', function(t) {
 test('decorate file', function(t) {
 	t.plan(6);
 	var file = decorate({}, fixtures.json, 'test');
-	t.equal(file.fileext, '.json', 'File extension is ".json"');
-	t.equal(file.filename, 'foo', 'File name is "foo"');
+	t.equal(file.fileext, '.json', 'File extension');
+	t.equal(file.filename, 'foo', 'File name');
 	t.ok(file.date, 'File date is available');
 	t.ok(moment.isMoment(file.date), 'File date is a moment object');
-	t.equal(file.filepath, 'fixtures/foo.json', 'File path is ');
-	t.equal(file.url, '/fixtures/foo', 'File url is ');
+	t.equal(file.filepath, 'fixtures/foo.json', 'File path');
+	t.equal(file.url, '/fixtures/foo', 'File url');
+});
 
 test('create paginated archive', function(t) {
 	t.plan(2);
@@ -82,7 +83,7 @@ test('create paginated archive', function(t) {
 	}, {
 		order: 3,
 		template: 'post.hbs'
-	}]);
+	}], 'Get and sort posts for archive');
 
 	var archivePages = archive.paginate(postsObject, 'posts', postsOption);
 	t.deepEqual(archivePages, {
@@ -129,5 +130,5 @@ test('create paginated archive', function(t) {
 				}]
 			}
 		}
-	});
+	}, 'Generate archive pages');
 });
