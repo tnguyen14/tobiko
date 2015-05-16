@@ -1,6 +1,6 @@
 {
   "name": "grunt-tobiko",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": {
     "name": "Tri Nguyen",
     "email": "tri@tridnguyen.com",
@@ -17,7 +17,7 @@
     "node": ">= 0.10.0"
   },
   "dependencies": {
-    "handlebars": "^2.0.0",
+    "handlebars": "^3.0.3",
     "js-yaml": "^3.2.2",
     "marked": "^0.3.2",
     "moment": "^2.8.3"
