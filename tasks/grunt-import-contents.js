@@ -3,11 +3,12 @@
  */
 'use strict';
 
+var contentParse = require('./lib/contentParse');
+
 module.exports = function (grunt) {
-	var fs = require('fs');
 	var path = require('path');
 	var _ = grunt.util._;
-	var content = require('./lib/content').init(grunt);
+	var content = require('./lib/content').init();
 
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
 		var options = this.options({
@@ -19,9 +20,6 @@ module.exports = function (grunt) {
 				smartypants: true
 			}
 		});
-
-		// global config
-		var config = grunt.file.readJSON(options.config);
 
 		// Content Tree
 		var contentTree = {};
@@ -42,7 +40,7 @@ module.exports = function (grunt) {
 					relpath = path.relative(options.baseDir, filepath),
 					filecontent = {};
 
-				filecontent = content.parse(filepath, options);
+				filecontent = contentParse(filepath, options);
 
 				// add filepath property if not specified
 				if (!filecontent.filepath) {
@@ -53,7 +51,7 @@ module.exports = function (grunt) {
 				// add full path for images
 				var image = /<img src=\"(.*\.(jpg|png))\"/g;
 				if (filecontent.main) {
-					filecontent.main = filecontent.main.replace(image, '<img src=\"' + filecontent.url + "/$1\"");
+					filecontent.main = filecontent.main.replace(image, '<img src="' + filecontent.url + '/$1"');
 				}
 
 				// Put content to the contentTree
@@ -82,13 +80,13 @@ module.exports = function (grunt) {
 					template: opt.template,
 					title: opt.title,
 					orderBy: opt.orderby
-				}
+				};
 			});
 
 			// paginate if something is specified
 			if (!_.isEmpty(paginateOptions)) {
 				// store all directories' archives
-				var archives = contentTree.contents.archives = {};
+				contentTree.contents.archives = {};
 				// iterate through global content object
 				// only support archive at top level
 				_(contentTree.contents).forEach(function(dir, key) {

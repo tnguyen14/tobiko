@@ -25,6 +25,7 @@
   "devDependencies": {
     "faucet": "0.0.1",
     "grunt": "^0.4.5",
+    "lodash": "^3.8.0",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0"
   },
