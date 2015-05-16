@@ -42,7 +42,7 @@ test('decorate file', function(t) {
 	t.ok(file.date, 'File date is available');
 	t.ok(moment.isMoment(file.date), 'File date is a moment object');
 	t.equal(file.filepath, 'fixtures/foo.json', 'File path');
-	t.equal(file.url, '/fixtures/foo', 'File url');
+	t.equal(file.url, '/fixtures', 'File url');
 });
 
 var archivePosts = {
