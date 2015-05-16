@@ -202,17 +202,16 @@ A file's content is available in the template under the `content` variable. Othe
 A directory with a big number of posts could be configured to paginate. The paginated pages are called archives.
 The option for enabling pagination can be added in `tobiko.json`. For example:
 ```js
-  "paginate": [
-    {
-      "dir": "posts",
+  "paginate": {
+    "posts": {
       "postPerPage": 4,
       "template": "archive.hbs",
       "title": "Posts"
     }
-  ]
+  }
 ```
-Each object in the `paginate` option represents a directory to be paginated. The options for each directory are:
-* `dir`: (string) directory name
+Each option in the `paginate` object represents a directory to be paginated. The key of each option is the directory name of the content to be paginated.
+Each archive can have the following options:
 * `orderby`: (string) how to order the posts in the archives. Default to ['date'](#date)
 * `postPerPage`: (number) number of posts to be displayed per archive page
 * `template`: (string) the template used to display these archive pages

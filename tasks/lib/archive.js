@@ -1,0 +1,108 @@
+'use strict';
+
+var moment = require('moment');
+var path = require('path');
+var _ = require('lodash');
+
+// sort array by keys
+// default to date
+function sortArrayByKey (array, key) {
+	array.sort(function(a,b) {
+		var sortKey = (key) ? key : 'date';
+		var aKey, bKey, compareResult;
+
+		if (a.hasOwnProperty(sortKey) && b.hasOwnProperty(sortKey)) {
+			aKey = a[sortKey];
+			bKey = b[sortKey];
+		} else {
+			return;
+		}
+
+		switch (sortKey) {
+			case 'date':
+				var aDate = moment(aKey);
+				var bDate = moment(bKey);
+				if (aDate.isBefore(bDate)) {
+					compareResult = 1;
+				} else if (aDate.isSame(bDate)) {
+					compareResult = 0;
+				} else if (aDate.isAfter(bDate)) {
+					compareResult = -1;
+				}
+				break;
+			default:
+				compareResult = aKey - bKey;
+		}
+		return compareResult;
+	});
+}
+
+function getPosts (dir, sortKey) {
+	function getPostsRecursive (posts) {
+		return _.map(posts, function (file) {
+			// if we're not at the post level yet, go deeper
+			if (!file.hasOwnProperty('template')) {
+				return getPostsRecursive(file);
+			} else {
+				return file;
+			}
+		});
+	}
+	var posts = _.flattenDeep(getPostsRecursive(dir));
+	sortArrayByKey(posts, sortKey);
+	return posts;
+}
+
+exports.getPosts = getPosts;
+
+/**
+ * @param {Object} dir - content directory
+ * @param {Object} dirName - name of content directory
+ */
+exports.paginate = function paginate(dir, dirName, options) {
+	var archive = {};
+
+	// flatten all posts nesting
+	var posts = getPosts(dir, options.orderby);
+
+	var numPages = Math.ceil(posts.length / options.postPerPage);
+
+	// set up each archive page
+	for (var pageNum = 1; pageNum <= numPages; pageNum++) {
+		archive[pageNum] = {};
+		var archivePage = archive[pageNum]['index.html'] = {};
+		// add template so it gets rendered
+		archivePage.template = options.template;
+		// a title as well
+		archivePage.title = options.title;
+		// initialize empty posts array
+		archivePage.posts = [];
+		// add correct filepath
+		archivePage.filepath = path.join(dirName, pageNum.toString(), 'index.html');
+		archivePage.url = path.join('/', dirName, pageNum.toString());
+
+		if (pageNum != numPages) {
+			archivePage.prevUrl = path.join('/', dirName, (pageNum + 1).toString());
+		}
+		if (pageNum != 1) {
+			archivePage.nextUrl = path.join('/', dirName, (pageNum - 1).toString());
+		}
+	}
+
+	// put posts into each archive page
+	var pNum, page;
+	for (var i = 0; i < posts.length; i++) {
+		pNum = Math.floor(i/ options.postPerPage) + 1;
+		page = archive[pNum]['index.html'];
+		page.posts.push(posts[i]);
+	}
+
+	// simplify filepath for archive 1
+	archive['1']['index.html'].filepath = path.join(dirName, 'index.html');
+	archive['1']['index.html'].url = path.join('/', dirName);
+
+	// make the first page of archive available at top level
+	archive['index.html'] = archive['1']['index.html'];
+
+	return archive;
+};

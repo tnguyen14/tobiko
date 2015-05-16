@@ -4,6 +4,7 @@ var test = require('tape');
 var moment = require('moment');
 var parse = require('../tasks/lib/parse');
 var decorate = require('../tasks/lib/decorate');
+var archive = require('../tasks/lib/archive');
 
 var fixtures = {
 	json: 'test/fixtures/foo.json',
@@ -42,4 +43,91 @@ test('decorate file', function(t) {
 	t.ok(moment.isMoment(file.date), 'File date is a moment object');
 	t.equal(file.filepath, 'fixtures/foo.json', 'File path is ');
 	t.equal(file.url, '/fixtures/foo', 'File url is ');
+
+test('create paginated archive', function(t) {
+	t.plan(2);
+	var postsObject = {
+		postOne: {
+			'index.json': {
+				template: 'post.hbs',
+				order: 1
+			}
+		},
+		postTwo: {
+			'index.md': {
+				template: 'post.hbs',
+				order: 3
+			}
+		},
+		postThree: {
+			'index.json': {
+				template: 'post.hbs',
+				order: 2
+			}
+		}
+	};
+	var postsOption = {
+		postPerPage: 2,
+		template: 'archive.hbs',
+		title: 'Posts',
+		orderby: 'order'
+	};
+	var posts = archive.getPosts(postsObject, postsOption.orderby);
+	t.deepEqual(posts, [{
+		order: 1,
+		template: 'post.hbs'
+	}, {
+		order: 2,
+		template: 'post.hbs'
+	}, {
+		order: 3,
+		template: 'post.hbs'
+	}]);
+
+	var archivePages = archive.paginate(postsObject, 'posts', postsOption);
+	t.deepEqual(archivePages, {
+		'index.html': {
+			filepath: 'posts/index.html',
+			url: '/posts',
+			template: postsOption.template,
+			title: postsOption.title,
+			prevUrl: '/posts/2',
+			posts: [{
+				order: 1,
+				template: 'post.hbs'
+			}, {
+				order: 2,
+				template: 'post.hbs'
+			}]
+		},
+		1: {
+			'index.html': {
+				filepath: 'posts/index.html',
+				url: '/posts',
+				template: postsOption.template,
+				title: postsOption.title,
+				prevUrl: '/posts/2',
+				posts: [{
+					order: 1,
+					template: 'post.hbs'
+				}, {
+					order: 2,
+					template: 'post.hbs'
+				}]
+			}
+		},
+		2: {
+			'index.html': {
+				filepath: 'posts/2/index.html',
+				url: '/posts/2',
+				template: postsOption.template,
+				title: postsOption.title,
+				nextUrl: '/posts/1',
+				posts: [{
+					order: 3,
+					template: 'post.hbs'
+				}]
+			}
+		}
+	});
 });

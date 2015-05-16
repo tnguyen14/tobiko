@@ -9,7 +9,7 @@ var path = require('path');
 
 var decorate = require('./lib/decorate');
 var parse = require('./lib/parse');
-var paginate = require('./lib/paginate');
+var archive = require('./lib/archive');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
@@ -36,20 +36,11 @@ module.exports = function (grunt) {
 				}
 			})
 			.forEach(function (filepath) {
-				var dirname = path.dirname(filepath),
-					directories = dirname.split(path.sep),
-					basename = path.basename(filepath, path.extname(filepath)),
-					relpath = path.relative(options.baseDir, filepath),
+				var directories = path.dirname(filepath).split(path.sep),
 					file;
 
-				file = parse(filepath, options);
+				file = parse(filepath, options.markdown);
 				file = decorate(file, filepath, options.baseDir);
-
-				// add full path for images
-				var image = /<img src=\"(.*\.(jpg|png))\"/g;
-				if (file.main) {
-					file.main = file.main.replace(image, '<img src="/' + path.dirname(file.filepath) + '/$1"');
-				}
 
 				// Put content to the contentTree
 				// start at the top of the content tree
@@ -65,42 +56,24 @@ module.exports = function (grunt) {
 					}
 				}
 				// once the deepest directory level is reached, put new content on the Content Tree
-				currentDir[basename] = file;
+				currentDir[file.filename] = file;
 			});
 
-			// Get pagination options from Gruntfile.js
-			var paginateOptions = {};
-			_(options.paginate).forEach(function(opt){
-				// make the directory the key, so easier to access options
-				paginateOptions[opt.dir] = {
-					postPerPage: opt.postPerPage,
-					template: opt.template,
-					title: opt.title,
-					orderBy: opt.orderby
-				};
-			});
-
+			var archives = {};
 			// paginate if something is specified
-			if (!_.isEmpty(paginateOptions)) {
-				// store all directories' archives
-				contentTree.contents.archives = {};
+			if (!_.isEmpty(options.paginate)) {
 				// iterate through global content object
 				// only support archive at top level
-				_(contentTree.contents).forEach(function(dir, key) {
-					if ( paginateOptions.hasOwnProperty(key) ) {
-						var archive = paginate(dir, key, paginateOptions[key]);
-
-						// make the first page of archive available at top level
-						if (archive['1']) {
-							archive['index.html'] = archive['1']['index.html'];
-						}
-						_.extend(contentTree.contents[key], archive);
-
+				_.forEach(options.paginate, function(option, key) {
+					if (contentTree.hasOwnProperty(key)) {
+						var archive = archive.paginate(contentTree[key], key, option);
+						_.extend(contentTree[key], archive);
 						// also make this archive available for a special archive portion of the contentTree
-						contentTree.contents.archives[key] = archive;
+						archives[key] = archive;
 					}
 				});
 			}
+			contentTree.archives = archives;
 
 			grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
 		});
