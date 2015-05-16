@@ -33,5 +33,11 @@ module.exports = function decorateFile(file, filepath, baseDir) {
 
 	file.url = '/' + path.dirname(file.filepath) + '/' + file.filename;
 
+	// add full path for images
+	var imageRe = /<img src=\"(.*\.(jpg|png))\"/g;
+	if (file.main) {
+		file.main = file.main.replace(imageRe, '<img src="/' + path.dirname(file.filepath) + '/$1"');
+	}
+
 	return file;
 };
