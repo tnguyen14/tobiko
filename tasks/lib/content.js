@@ -1,13 +1,14 @@
-exports.init = function (grunt) {
-	'use strict';
+'use strict';
 
-	var fs = require('fs'),
-		path = require('path'),
-		jsYAML = require('js-yaml'),
-		moment = require('moment'),
-		_ = grunt.util._,
-		marked = require('marked');
-	var exports = {};
+var fs = require('fs');
+var path = require('path');
+var jsYAML = require('js-yaml');
+var moment = require('moment');
+var marked = require('marked');
+
+exports.init = function (grunt) {
+	var _ = grunt.util._;
+	var content = {};
 
 	// Helper functions
 
@@ -63,11 +64,11 @@ exports.init = function (grunt) {
 	};
 
 	// Parse JSON and markdown content
-	exports.parse = function(filepath, options) {
+	content.parse = function(filepath, options) {
 		var ext = path.extname(filepath),
 			basename = path.basename(filepath, ext),
 			// remove 'contents' from path
-			content;
+			file;
 
 		// Ignore draft posts (_) and dotfiles
 		if (basename[0] === '_' || basename[0] === '.') {
@@ -76,7 +77,7 @@ exports.init = function (grunt) {
 
 		// get the JSON files
 		if (ext === '.json') {
-			content = grunt.file.readJSON(filepath);
+			file = grunt.file.readJSON(filepath);
 
 		// parse markdown files
 		// with some inspiration from https://github.com/ChrisWren/grunt-pages/blob/master/tasks/index.js
@@ -91,7 +92,7 @@ exports.init = function (grunt) {
 			try {
 				var sections = fileContent.split('---');
 				// YAML frontmatter is the part in between the 2 '---'
-				content = jsYAML.safeLoad(sections[1]);
+				file = jsYAML.safeLoad(sections[1]);
 
 				// get to the markdown part
 				sections.shift();
@@ -102,44 +103,44 @@ exports.init = function (grunt) {
 				// convert new line characters to html line breaks
 				// markdown = nl2br(markdown);
 
-				content.main = markdown;
+				file.main = markdown;
 			} catch (e) {
 				grunt.fail.fatal(e + ' .Failed to parse markdown data from ' + filepath);
 			}
 		}
 
-		if (content) {
+		if (file) {
 			// add support for date using moment.js http://momentjs.com/
-			if (!content.date) {
-				content.date = fs.statSync(filepath).ctime;
+			if (!file.date) {
+				file.date = fs.statSync(filepath).ctime;
 			}
 			// if date isn't already a moment type, convert it to momentjs
-			if (!moment.isMoment(content.date)) {
-				var mDate = moment(content.date);
+			if (!moment.isMoment(file.date)) {
+				var mDate = moment(file.date);
 				// check if the string is a valid date format http://momentjs.com/docs/#/parsing/string/
 				if (mDate.isValid()) {
-					content.date = mDate;
+					file.date = mDate;
 				} else {
 					grunt.log.writeln('The date used in ' + filepath + ' is not supported.');
 				}
 			}
 
 			// add file name and extension
-			content.filename = basename;
-			content.fileext = ext;
+			file.filename = basename;
+			file.fileext = ext;
 
 			// // add full path for images
 			// var image = /<img src=\"(.*\.jpg|png)\"/;
-			// if (content.main) {
-			// 	console.log(content.url);
-			// 	content.main = content.main.replace(image, '<img src=\"' + content.url + "/$1\"");
+			// if (file.main) {
+			// 	console.log(file.url);
+			// 	file.main = file.main.replace(image, '<img src=\"' + file.url + "/$1\"");
 			// }
 		}
-		return content;
+		return file;
 	};
 
 	// Pagination
-	exports.paginate = function(dir, key, options) {
+	content.paginate = function(dir, key, options) {
 		var archive = {},
 			posts = [];
 
@@ -151,7 +152,7 @@ exports.init = function (grunt) {
 
 		// get all the posts (content file with `template` declared)
 		function getPosts(dir) {
-			return _(dir).map(function (value, key) {
+			return _(dir).map(function (value) {
 				// if we're not at the post level yet, go deeper
 				if (!value.hasOwnProperty('template')) {
 					return getPosts(value);
@@ -159,7 +160,7 @@ exports.init = function (grunt) {
 					return value;
 				}
 			});
-		};
+		}
 		// flatten all posts nesting
 		posts = _.flatten(getPosts(dir));
 
@@ -194,7 +195,7 @@ exports.init = function (grunt) {
 		for (var i = 0; i < posts.length; i++){
 			var pageNum = Math.ceil((i+1)/ postPerPage);
 			var archivePage = archive[pageNum]['index.html'];
-			archivePage['posts'].push(posts[i]);
+			archivePage.posts.push(posts[i]);
 		}
 
 		// simplify filepath for archive 1
@@ -204,5 +205,5 @@ exports.init = function (grunt) {
 		return archive;
 	};
 
-	return exports;
+	return content;
 };
