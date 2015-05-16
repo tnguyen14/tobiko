@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var contentParse = require('./lib/contentParse');
+var parse = require('./lib/parse');
 var paginate = require('./lib/paginate');
 
 module.exports = function (grunt) {
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 					relpath = path.relative(options.baseDir, filepath),
 					filecontent = {};
 
-				filecontent = contentParse(filepath, options);
+				filecontent = parse(filepath, options);
 
 				// add filepath property if not specified
 				if (!filecontent.filepath) {
