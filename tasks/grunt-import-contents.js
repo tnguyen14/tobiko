@@ -4,10 +4,12 @@
  */
 'use strict';
 
+var _ = require('lodash');
 var path = require('path');
+
+var decorate = require('./lib/decorate');
 var parse = require('./lib/parse');
 var paginate = require('./lib/paginate');
-var _ = require('lodash');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
@@ -38,20 +40,15 @@ module.exports = function (grunt) {
 					directories = dirname.split(path.sep),
 					basename = path.basename(filepath, path.extname(filepath)),
 					relpath = path.relative(options.baseDir, filepath),
-					filecontent = {};
+					file;
 
-				filecontent = parse(filepath, options);
-
-				// add filepath property if not specified
-				if (!filecontent.filepath) {
-					filecontent.filepath = relpath;
-				}
-				filecontent.url = '/' + path.dirname(filecontent.filepath);
+				file = parse(filepath, options);
+				file = decorate(file, filepath, options.baseDir);
 
 				// add full path for images
 				var image = /<img src=\"(.*\.(jpg|png))\"/g;
-				if (filecontent.main) {
-					filecontent.main = filecontent.main.replace(image, '<img src="' + filecontent.url + '/$1"');
+				if (file.main) {
+					file.main = file.main.replace(image, '<img src="/' + path.dirname(file.filepath) + '/$1"');
 				}
 
 				// Put content to the contentTree
@@ -68,7 +65,7 @@ module.exports = function (grunt) {
 					}
 				}
 				// once the deepest directory level is reached, put new content on the Content Tree
-				currentDir[basename] = filecontent;
+				currentDir[basename] = file;
 			});
 
 			// Get pagination options from Gruntfile.js
