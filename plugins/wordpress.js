@@ -46,7 +46,7 @@ function getWordPressContent(contentTree, options) {
 	return new Promise(function (resolve) {
 		if (!_.isEmpty(options)) {
 			return Promise.all(options.contents.map(function (endpoint) {
-				getEndpoint(endpoint, options.apiRoot);
+				return getEndpoint(endpoint, options.apiRoot);
 			})).then(function (contents) {
 					contents.forEach(function (c) {
 						contentTree[c.folder] = c.posts;
