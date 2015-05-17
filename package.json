@@ -21,12 +21,12 @@
     "js-yaml": "^3.2.2",
     "lodash": "^3.8.0",
     "marked": "^0.3.2",
-    "moment": "^2.8.3"
+    "moment": "^2.8.3",
+    "superagent": "^1.2.0"
   },
   "devDependencies": {
     "faucet": "0.0.1",
     "grunt": "^0.4.5",
-    "lodash": "^3.8.0",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0"
   },

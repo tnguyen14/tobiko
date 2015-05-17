@@ -5,11 +5,11 @@
 'use strict';
 
 var path = require('path');
-var _ = require('lodash');
 
 var decorate = require('../lib/decorate');
 var parse = require('../lib/parse');
 var archive = require('../plugins/archive');
+var wordpress = require('../plugins/wordpress');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
@@ -66,6 +66,8 @@ module.exports = function (grunt) {
 			});
 
 			plugins.then(function (contentTree) {
+				return wordpress.init(contentTree, options.wordpress);
+			}).then(function (contentTree) {
 				return archive.init(contentTree, options.archives);
 			}).then(function (contentTree) {
 				grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
