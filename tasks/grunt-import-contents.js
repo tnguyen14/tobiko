@@ -5,6 +5,7 @@
 'use strict';
 
 var path = require('path');
+var fs = require('fs');
 
 var decorate = require('../lib/decorate');
 var parse = require('../lib/parse');
@@ -42,6 +43,9 @@ module.exports = function (grunt) {
 					file;
 
 				file = parse(fpath, options.markdown);
+				if (!file.date) {
+					file.date = fs.statSync(fpath).ctime;
+				}
 				file = decorate(file, filepath);
 
 				// Put content to the contentTree
