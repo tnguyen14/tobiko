@@ -6,7 +6,7 @@
 
 var path = require('path');
 var _ = require('lodash');
-var getTemplates = require('./lib/templates');
+var getTemplates = require('../lib/templates');
 
 module.exports = function (grunt) {
 	// Grunt task!

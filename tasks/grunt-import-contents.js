@@ -6,9 +6,9 @@
 
 var path = require('path');
 
-var decorate = require('./lib/decorate');
-var parse = require('./lib/parse');
-var archive = require('./plugins/archive');
+var decorate = require('../lib/decorate');
+var parse = require('../lib/parse');
+var archive = require('../plugins/archive');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
