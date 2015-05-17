@@ -106,17 +106,19 @@ function paginate(dir, dirName, options) {
 }
 
 function makeArchives(contentTree, options) {
-	var archives = {};
-	_.forEach(options, function (archiveOpt, dir) {
-		if (contentTree.hasOwnProperty(dir)) {
-			var archive = paginate(contentTree[dir], dir, archiveOpt);
-			_.extend(contentTree[dir], archive);
-			// also make this archive available for a special archive portion of the contentTree
-			archives[dir] = archive;
-		}
+	return new Promise(function (resolve, reject) {
+		var archives = {};
+		_.forEach(options, function (archiveOpt, dir) {
+			if (contentTree.hasOwnProperty(dir)) {
+				var archive = paginate(contentTree[dir], dir, archiveOpt);
+				_.extend(contentTree[dir], archive);
+				// also make this archive available for a special archive portion of the contentTree
+				archives[dir] = archive;
+			}
+		});
+		contentTree.archives = archives;
+		resolve(contentTree);
 	});
-	contentTree.archives = archives;
-	return contentTree;
 }
 
 exports.getPosts = getPosts;

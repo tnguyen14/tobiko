@@ -5,6 +5,7 @@
 'use strict';
 
 var path = require('path');
+var _ = require('lodash');
 
 var decorate = require('../lib/decorate');
 var parse = require('../lib/parse');
@@ -25,6 +26,7 @@ module.exports = function (grunt) {
 		// Content Tree
 		var contentTree = {};
 		this.files.forEach(function (f) {
+			var done = this.async();
 			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
 				if (!grunt.file.exists(filepath)) {
@@ -58,9 +60,18 @@ module.exports = function (grunt) {
 				currentDir[file.filename] = file;
 			});
 
-			archive.init(contentTree, options.archives);
+			var plugins = new Promise(function (resolve, reject) {
+				if (!_.empty(options.archives)) {
+					return archive.init(contentTree, options.archives);
+				} else {
+					resolve(contentTree);
+				}
+			});
 
-			grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
+			plugins.then(function (contentTree) {
+				grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
+				done();
+			});
 		});
 	});
 };
