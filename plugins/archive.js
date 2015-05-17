@@ -95,12 +95,10 @@ function paginate(dir, dirName, options) {
 		page.posts.push(posts[i]);
 	}
 
-	// simplify filepath for archive 1
-	archive['1']['index.html'].filepath = path.join(dirName, 'index.html');
-	archive['1']['index.html'].url = path.join('/', dirName);
-
 	// make the first page of archive available at top level
-	archive['index.html'] = archive['1']['index.html'];
+	archive['index.html'] = _.cloneDeep(archive['1']['index.html']);
+	archive['index.html'].filepath = path.join(dirName, 'index.html');
+	archive['index.html'].url = path.join('/', dirName);
 
 	return archive;
 }
