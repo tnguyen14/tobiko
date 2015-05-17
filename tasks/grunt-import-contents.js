@@ -41,7 +41,7 @@ module.exports = function (grunt) {
 				var directories = path.dirname(filepath).split(path.sep),
 					file;
 
-				file = parse(filepath, options.markdown);
+				file = parse(fpath, options.markdown);
 				file = decorate(file, filepath);
 
 				// Put content to the contentTree
