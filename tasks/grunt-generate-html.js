@@ -81,7 +81,7 @@ module.exports = function (grunt) {
 			}
 
 			// render all the contents
-			renderContent(data.contents);
+			renderContent(data);
 			grunt.log.writeln( 'Created ' + tally.toString().cyan + ' files.');
 		});
 	});

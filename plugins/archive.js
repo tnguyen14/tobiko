@@ -106,7 +106,7 @@ function paginate(dir, dirName, options) {
 }
 
 function makeArchives(contentTree, options) {
-	return new Promise(function (resolve, reject) {
+	return new Promise(function (resolve) {
 		var archives = {};
 		_.forEach(options, function (archiveOpt, dir) {
 			if (contentTree.hasOwnProperty(dir)) {

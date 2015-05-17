@@ -36,12 +36,13 @@ module.exports = function (grunt) {
 					return true;
 				}
 			})
-			.forEach(function (filepath) {
+			.forEach(function (fpath) {
+				var filepath = path.relative(options.baseDir, fpath);
 				var directories = path.dirname(filepath).split(path.sep),
 					file;
 
 				file = parse(filepath, options.markdown);
-				file = decorate(file, filepath, options.baseDir);
+				file = decorate(file, filepath);
 
 				// Put content to the contentTree
 				// start at the top of the content tree
@@ -60,7 +61,7 @@ module.exports = function (grunt) {
 				currentDir[file.filename] = file;
 			});
 
-			var plugins = new Promise(function (resolve, reject) {
+			var plugins = new Promise(function (resolve) {
 				if (!_.isEmpty(options.archives)) {
 					return archive.init(contentTree, options.archives);
 				} else {

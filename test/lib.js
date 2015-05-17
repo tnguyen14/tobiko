@@ -35,11 +35,11 @@ test('should ignore draft files', function(t) {
 
 test('decorate file', function(t) {
 	t.plan(6);
-	var file = decorate({}, fixtures.json, 'test');
+	var file = decorate({}, fixtures.json);
 	t.equal(file.fileext, '.json', 'File extension');
 	t.equal(file.filename, 'foo', 'File name');
 	t.ok(file.date, 'File date is available');
 	t.ok(moment.isMoment(file.date), 'File date is a moment object');
-	t.equal(file.filepath, 'fixtures/foo.json', 'File path');
-	t.equal(file.url, '/fixtures', 'File url');
+	t.equal(file.filepath, 'test/fixtures/foo.json', 'File path');
+	t.equal(file.url, '/test/fixtures', 'File url');
 });
