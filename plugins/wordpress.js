@@ -26,12 +26,13 @@ function parseEndpoint(posts, endpoint) {
 function getEndpoint(endpoint, apiRoot) {
 	return new Promise(function (resolve, reject) {
 		var url = apiRoot + '/' + endpoint.postType;
+		var query = _.extend({
+			filter: {
+				posts_per_page: -1
+			}
+		}, endpoint.query);
 		request.get(url)
-			.query({
-				filter: {
-					// posts_per_page: -1
-				}
-			})
+			.query(query)
 			.end(function (err, res) {
 				if (err) {
 					reject(err);
