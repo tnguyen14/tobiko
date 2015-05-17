@@ -204,7 +204,7 @@ The option for enabling pagination can be added in `tobiko.json`. For example:
 ```js
   "archives": {
     "posts": {
-      "postPerPage": 4,
+      "postsPerPage": 4,
       "template": "archive.hbs",
       "title": "Posts"
     }
@@ -213,7 +213,7 @@ The option for enabling pagination can be added in `tobiko.json`. For example:
 Each option in the `paginate` object represents a directory to be paginated. The key of each option is the directory name of the content to be paginated.
 Each archive can have the following options:
 * `orderby`: (string) how to order the posts in the archives. Default to ['date'](#date)
-* `postPerPage`: (number) number of posts to be displayed per archive page
+* `postsPerPage`: (number) number of posts to be displayed per archive page
 * `template`: (string) the template used to display these archive pages
 * `title`: (string) title of these archive pages (this will be made available to use in template as `content.title`)
 

@@ -63,7 +63,7 @@ function paginate(dir, dirName, options) {
 	// flatten all posts nesting
 	var posts = getPosts(dir, options.orderby);
 
-	var numPages = Math.ceil(posts.length / options.postPerPage);
+	var numPages = Math.ceil(posts.length / options.postsPerPage);
 
 	// set up each archive page
 	for (var pageNum = 1; pageNum <= numPages; pageNum++) {
@@ -91,7 +91,7 @@ function paginate(dir, dirName, options) {
 	// put posts into each archive page
 	var pNum, page;
 	for (var i = 0; i < posts.length; i++) {
-		pNum = Math.floor(i/ options.postPerPage) + 1;
+		pNum = Math.floor(i/ options.postsPerPage) + 1;
 		page = archive[pNum]['index.html'];
 		page.posts.push(posts[i]);
 	}
