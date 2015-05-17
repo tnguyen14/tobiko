@@ -198,11 +198,11 @@ or in the YAML frontmatter. A file with no `template` property will not be rende
 
 A file's content is available in the template under the `content` variable. Other sub-directories included in the same directory is accessible in the template with [nesting](#nesting).
 
-#### Pagination and Archives
+#### Archives and Pagination
 A directory with a big number of posts could be configured to paginate. The paginated pages are called archives.
 The option for enabling pagination can be added in `tobiko.json`. For example:
 ```js
-  "paginate": {
+  "archives": {
     "posts": {
       "postPerPage": 4,
       "template": "archive.hbs",

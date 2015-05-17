@@ -53,13 +53,11 @@ function getPosts (dir, sortKey) {
 	return posts;
 }
 
-exports.getPosts = getPosts;
-
 /**
  * @param {Object} dir - content directory
  * @param {Object} dirName - name of content directory
  */
-exports.paginate = function paginate(dir, dirName, options) {
+function paginate(dir, dirName, options) {
 	var archive = {};
 
 	// flatten all posts nesting
@@ -105,4 +103,22 @@ exports.paginate = function paginate(dir, dirName, options) {
 	archive['index.html'] = archive['1']['index.html'];
 
 	return archive;
-};
+}
+
+function makeArchives(contentTree, options) {
+	var archives = {};
+	_.forEach(options, function (archiveOpt, dir) {
+		if (contentTree.hasOwnProperty(dir)) {
+			var archive = paginate(contentTree[dir], dir, archiveOpt);
+			_.extend(contentTree[dir], archive);
+			// also make this archive available for a special archive portion of the contentTree
+			archives[dir] = archive;
+		}
+	});
+	contentTree.archives = archives;
+	return contentTree;
+}
+
+exports.getPosts = getPosts;
+exports.paginate = paginate;
+exports.init = makeArchives;

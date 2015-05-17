@@ -4,7 +4,7 @@ var test = require('tape');
 var moment = require('moment');
 var parse = require('../tasks/lib/parse');
 var decorate = require('../tasks/lib/decorate');
-var archive = require('../tasks/lib/archive');
+var archive = require('../tasks/plugins/archive');
 
 var fixtures = {
 	json: 'test/fixtures/foo.json',

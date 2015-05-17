@@ -4,12 +4,11 @@
  */
 'use strict';
 
-var _ = require('lodash');
 var path = require('path');
 
 var decorate = require('./lib/decorate');
 var parse = require('./lib/parse');
-var archive = require('./lib/archive');
+var archive = require('./plugins/archive');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
@@ -59,21 +58,7 @@ module.exports = function (grunt) {
 				currentDir[file.filename] = file;
 			});
 
-			var archives = {};
-			// paginate if something is specified
-			if (!_.isEmpty(options.paginate)) {
-				// iterate through global content object
-				// only support archive at top level
-				_.forEach(options.paginate, function(option, key) {
-					if (contentTree.hasOwnProperty(key)) {
-						var archive = archive.paginate(contentTree[key], key, option);
-						_.extend(contentTree[key], archive);
-						// also make this archive available for a special archive portion of the contentTree
-						archives[key] = archive;
-					}
-				});
-			}
-			contentTree.archives = archives;
+			archive.init(contentTree, options.archives);
 
 			grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
 		});
