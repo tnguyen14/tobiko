@@ -76,6 +76,7 @@ function paginate(dir, dirName, options) {
 		// initialize empty posts array
 		archivePage.posts = [];
 		// add correct filepath
+		archivePage.filename = 'index';
 		archivePage.filepath = path.join(dirName, pageNum.toString(), 'index.html');
 		archivePage.url = path.join('/', dirName, pageNum.toString());
 
