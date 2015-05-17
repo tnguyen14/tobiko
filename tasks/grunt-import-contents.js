@@ -62,14 +62,12 @@ module.exports = function (grunt) {
 			});
 
 			var plugins = new Promise(function (resolve) {
-				if (!_.isEmpty(options.archives)) {
-					return archive.init(contentTree, options.archives);
-				} else {
-					resolve(contentTree);
-				}
+				resolve(contentTree);
 			});
 
 			plugins.then(function (contentTree) {
+				return archive.init(contentTree, options.archives);
+			}).then(function (contentTree) {
 				grunt.file.write(f.dest, JSON.stringify(contentTree, null, '\t'));
 				done();
 			});
