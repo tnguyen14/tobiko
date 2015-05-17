@@ -13,6 +13,7 @@ var archive = require('../plugins/archive');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('import_contents', 'import all JSON and MD files', function () {
+		var done = this.async();
 		var options = this.options({
 			baseDir: 'contents',
 			config: 'config.json',
@@ -26,7 +27,6 @@ module.exports = function (grunt) {
 		// Content Tree
 		var contentTree = {};
 		this.files.forEach(function (f) {
-			var done = this.async();
 			f.src.filter(function (filepath) {
 				// Warn on and remove invalid source files (if nonull was set).
 				if (!grunt.file.exists(filepath)) {
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
 			});
 
 			var plugins = new Promise(function (resolve, reject) {
-				if (!_.empty(options.archives)) {
+				if (!_.isEmpty(options.archives)) {
 					return archive.init(contentTree, options.archives);
 				} else {
 					resolve(contentTree);
