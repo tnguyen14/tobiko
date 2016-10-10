@@ -6,21 +6,18 @@ const getTemplates = require('./lib/templates');
 const glob = require('glob');
 const debug = require('debug')('tobiko');
 const mkdirp = require('mkdirp');
+const cpFile = require('cp-file');
+
 // register plugins
 const plugins = {
 	wordpress: require('./plugins/wordpress'),
 	archive: require('./plugins/archive')
 };
 
-module.exports = function (opts) {
-	return importContents(opts).then((contentTree) => {
-		return generateHtml(opts, contentTree);
-	});
-}
-
-function importContents (options) {
+module.exports = function (options) {
 	let opts = Object.assign({}, {
-		baseDir: 'contents',
+		contentsDir: 'contents',
+		outDir: 'dist',
 		markdown: {
 			breaks: true,
 			smartLists: true,
@@ -32,10 +29,35 @@ function importContents (options) {
 		}
 	}, options);
 
-	var contentTree = {};
+	return Promise.all([importContents(opts).then((contentTree) => {
+		return generateHtml(opts, contentTree);
+	}), copyImages(opts)]);
+};
 
+function copyImages (opts) {
 	return new Promise((resolve, reject) => {
-		glob(opts.baseDir + '/**/*.{md,json}', (err, files) => {
+		// copy images
+		glob(opts.contentsDir + '/**/*.{jpg,png,svg}', (err, files) => {
+			if (err) {
+				return reject(err);
+			}
+			return Promise.all(files.map((filepath) => {
+				let pathWithoutContentsDir = path.relative(opts.contentsDir, filepath);
+				return cpFile(filepath, path.resolve(opts.outDir, pathWithoutContentsDir));
+			})).then(() => {
+				resolve();
+			});
+		});
+	});
+}
+
+function importContents (opts) {
+	var contentTree = {};
+	return new Promise((resolve, reject) => {
+		glob(opts.contentsDir + '/**/*.{md,json}', (err, files) => {
+			if (err) {
+				return reject(err);
+			}
 			files.forEach((filepath) => {
 				processFile(filepath, opts, contentTree);
 			});
@@ -46,24 +68,24 @@ function importContents (options) {
 		// pass through plugins
 		return Object.keys(plugins).reduce((prevPlugin, pluginName) => {
 			return prevPlugin.then((contents) => {
-				return plugins[pluginName](contents, options.plugins[pluginName]);
+				return plugins[pluginName](contents, opts.plugins[pluginName]);
 			});
 		}, Promise.resolve(contents));
 	});
 }
 
 function processFile (filepath, opts, contentTree) {
-	let pathWithoutBaseDir = path.relative(opts.baseDir, filepath);
-	let directories = path.dirname(pathWithoutBaseDir).split(path.sep);
+	let pathWithoutContentsDir = path.relative(opts.contentsDir, filepath);
+	let directories = path.dirname(pathWithoutContentsDir).split(path.sep);
 	let file = parse(filepath, opts.markdown);
 
 	if (!file.date) {
 		file.date = fs.statSync(filepath).ctime;
 	}
-	file = decorate(file, pathWithoutBaseDir);
+	file = decorate(file, pathWithoutContentsDir);
 
 	// Put the file content on the content tree
-	
+
 	// Start at the top of the content tree, traverse the directory path
 	let currentDir = contentTree;
 	directories.forEach((d) => {
@@ -102,7 +124,7 @@ function generateHtml (options, contentTree) {
 			debug(e);
 		}
 	}
-	
+
 	let templates = getTemplates(opts.handlebars);
 
 	let fileTally = 0;
@@ -113,7 +135,7 @@ function generateHtml (options, contentTree) {
 		}, (err) => {
 			debug(err);
 		});
-	
+
 	function renderContent (contents) {
 		return Promise.all(Object.keys(contents).map((filename) => {
 			let file = contents[filename];

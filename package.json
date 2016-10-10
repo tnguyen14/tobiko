@@ -7,18 +7,15 @@
     "url": "https://github.com/tnguyen14"
   },
   "main": "index.js",
-  "description": "the grunt plugin that powers tobiko static site generator",
+  "description": "static site generator",
   "keywords": [
     "static site generator",
-    "tobiko",
-    "grunt"
+    "tobiko"
   ],
   "repository": "tnguyen14/tobiko",
-  "engines": {
-    "node": ">= 0.12.2"
-  },
   "license": "ISC",
   "dependencies": {
+    "cp-file": "^4.1.0",
     "glob": "^7.1.1",
     "handlebars": "^3.0.3",
     "js-yaml": "^3.2.2",
@@ -26,8 +23,7 @@
     "marked": "^0.3.2",
     "mkdirp": "^0.5.1",
     "moment": "^2.8.3",
-    "node-fetch": "^1.6.3",
-    "superagent": "^1.2.0"
+    "node-fetch": "^1.6.3"
   },
   "devDependencies": {
     "debug": "^2.2.0",

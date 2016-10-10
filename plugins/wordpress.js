@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
-var request = require('superagent');
 let debug = require('debug')('tobiko');
 let fetch = require('node-fetch');
 
@@ -26,7 +24,7 @@ function getPosts (url, postsPerPage, page, posts) {
 		});
 }
 
-function getEndpoint(endpoint, apiRoot) {
+function getEndpoint (endpoint, apiRoot) {
 	let postsPerPage = 100;
 	let page = 1;
 	return getPosts(apiRoot + '/' + endpoint.postType, postsPerPage, page, [])
@@ -46,10 +44,10 @@ function getEndpoint(endpoint, apiRoot) {
 				};
 				return _posts;
 			}, {});
-		})
+		});
 }
 
-function getWordPressContent(contentTree, options) {
+function getWordPressContent (contentTree, options) {
 	// if no options, quit early
 	if (!Object.keys(options)) {
 		return Promise.resolve(contentTree);
