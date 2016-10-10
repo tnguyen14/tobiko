@@ -6,6 +6,11 @@ const getTemplates = require('./lib/templates');
 const glob = require('glob');
 const debug = require('debug')('tobiko');
 const mkdirp = require('mkdirp');
+// register plugins
+const plugins = {
+	wordpress: require('./plugins/wordpress'),
+	archive: require('./plugins/archive')
+};
 
 module.exports = function (opts) {
 	return importContents(opts).then((contentTree) => {
@@ -37,6 +42,13 @@ function importContents (options) {
 
 			resolve(contentTree);
 		});
+	}).then((contents) => {
+		// pass through plugins
+		return Object.keys(plugins).reduce((prevPlugin, pluginName) => {
+			return prevPlugin.then((contents) => {
+				return plugins[pluginName](contents, options.plugins[pluginName]);
+			});
+		}, Promise.resolve(contents));
 	});
 }
 
