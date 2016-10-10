@@ -1,7 +1,5 @@
-'use strict';
-
-var test = require('tape');
-var archive = require('../plugins/archive');
+const test = require('tape');
+const archive = require('../plugins/archive');
 
 var archivePosts = {
 	postOne: {
@@ -30,7 +28,7 @@ var archiveOption = {
 	orderby: 'order'
 };
 
-test('Get and sort posts for archive', function(t) {
+test('Get and sort posts for archive', function (t) {
 	t.plan(1);
 	var posts = archive.getPosts(archivePosts, archiveOption.orderby);
 	t.deepEqual(posts, [{
@@ -45,7 +43,7 @@ test('Get and sort posts for archive', function(t) {
 	}], 'Get and sort posts for archive');
 });
 
-test('Generate archive pages', function(t) {
+test('Generate archive pages', function (t) {
 	t.plan(1);
 	var archivePages = archive.paginate(archivePosts, 'posts', archiveOption);
 	t.deepEqual(archivePages, {

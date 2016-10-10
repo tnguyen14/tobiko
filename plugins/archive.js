@@ -1,8 +1,6 @@
-'use strict';
-
-var moment = require('moment');
-var path = require('path');
-var _ = require('lodash');
+const moment = require('moment');
+const path = require('path');
+const _ = require('lodash');
 
 module.exports = makeArchives;
 
@@ -13,8 +11,8 @@ module.exports.paginate = paginate;
 // sort array by keys
 // default to date
 function sortArrayByKey (array, key) {
-	array.sort(function(a,b) {
-		var sortKey = (key) ? key : 'date';
+	array.sort(function (a, b) {
+		var sortKey = key || 'date';
 		var aKey, bKey, compareResult;
 
 		if (a.hasOwnProperty(sortKey) && b.hasOwnProperty(sortKey)) {
@@ -63,7 +61,7 @@ function getPosts (dir, sortKey) {
  * @param {Object} dir - content directory
  * @param {Object} dirName - name of content directory
  */
-function paginate(dir, dirName, options) {
+function paginate (dir, dirName, options) {
 	var archive = {};
 
 	// flatten all posts nesting
@@ -86,10 +84,10 @@ function paginate(dir, dirName, options) {
 		archivePage.filepath = path.join(dirName, pageNum.toString(), 'index.html');
 		archivePage.url = path.join('/', dirName, pageNum.toString());
 
-		if (pageNum != numPages) {
+		if (pageNum !== numPages) {
 			archivePage.prevUrl = path.join('/', dirName, (pageNum + 1).toString());
 		}
-		if (pageNum != 1) {
+		if (pageNum !== 1) {
 			archivePage.nextUrl = path.join('/', dirName, (pageNum - 1).toString());
 		}
 	}
@@ -97,7 +95,7 @@ function paginate(dir, dirName, options) {
 	// put posts into each archive page
 	var pNum, page;
 	for (var i = 0; i < posts.length; i++) {
-		pNum = Math.floor(i/ options.postsPerPage) + 1;
+		pNum = Math.floor(i / options.postsPerPage) + 1;
 		page = archive[pNum].index;
 		page.posts.push(posts[i]);
 	}
@@ -110,7 +108,7 @@ function paginate(dir, dirName, options) {
 	return archive;
 }
 
-function makeArchives(contentTree, options) {
+function makeArchives (contentTree, options) {
 	return new Promise(function (resolve) {
 		if (!_.isEmpty(options)) {
 			var archives = {};

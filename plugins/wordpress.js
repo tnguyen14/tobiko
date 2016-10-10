@@ -1,7 +1,5 @@
-'use strict';
-
-let debug = require('debug')('tobiko');
-let fetch = require('node-fetch');
+const debug = require('debug')('tobiko');
+const fetch = require('node-fetch');
 
 module.exports = getWordPressContent;
 
