@@ -1,0 +1,38 @@
+{
+  "name": "tobiko",
+  "version": "1.0.0",
+  "author": {
+    "name": "Tri Nguyen",
+    "email": "tri@tridnguyen.com",
+    "url": "https://github.com/tnguyen14"
+  },
+  "main": "index.js",
+  "description": "the grunt plugin that powers tobiko static site generator",
+  "keywords": [
+    "static site generator",
+    "tobiko",
+    "grunt"
+  ],
+  "repository": "tnguyen14/tobiko",
+  "engines": {
+    "node": ">= 0.12.2"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^7.1.1",
+    "handlebars": "^3.0.3",
+    "js-yaml": "^3.2.2",
+    "lodash": "^3.8.0",
+    "marked": "^0.3.2",
+    "moment": "^2.8.3",
+    "superagent": "^1.2.0"
+  },
+  "devDependencies": {
+    "debug": "^2.2.0",
+    "tap-spec": "^4.0.2",
+    "tape": "^4.0.0"
+  },
+  "scripts": {
+    "test": "tape ./test/*.js | tap-spec"
+  }
+}
