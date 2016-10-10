@@ -1,7 +1,7 @@
 # tobiko
 
 [![Build Status](https://secure.travis-ci.org/tnguyen14/tobiko.png?branch=master)](https://travis-ci.org/tnguyen14/tobiko)
-[![NPM](https://nodei.co/npm/grunt-tobiko.png)](https://nodei.co/npm/tobiko/)
+[![NPM](https://nodei.co/npm/tobiko.png)](https://nodei.co/npm/tobiko/)
 
 > a JavaScript static site generator with support for WordPress
 
