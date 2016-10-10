@@ -66,7 +66,7 @@ High level, site-wide configurations can be specified in `config.json` in the ro
 
 For example:
 
-config.json
+`config.json`
 ```json
 {
     "site-name": "Tobiko Example",
@@ -75,7 +75,7 @@ config.json
 }
 ```
 
-config.dev.json
+`config.dev.json`
 ```json
 {
     "site-url": "http://localhost:4000",
@@ -125,7 +125,7 @@ Each page specifies a template that it uses, either as a JSON property or YAML f
 
 Example:
 
-index.json
+`index.json`
 ```js
 {
   template: "index.hbs",
@@ -133,7 +133,7 @@ index.json
 }
 ```
 
-index.md
+`index.md`
 ```md
 ---
 template: index.hbs
@@ -254,6 +254,11 @@ The paginated content in each archive page is accessible in the template file un
 The site can be deployed to [Github Pages](http://pages.github.com) or any static site hosting solutions.
 
 In order to deploy to Github Pages, you can use [`gh-pages`](https://www.npmjs.com/package/gh-pages).
+
+## Examples
+Some examples of how tobiko is used
+
+- [tnguyen14/tridnguyen.com](https://github.com/tnguyen14/tridnguyen.com)
 
 ## Issues/ Requests
 Any issues, questions or feature requests could be created under [Github Issues](https://github.com/tnguyen14/tobiko/issues).
