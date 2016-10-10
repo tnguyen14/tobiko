@@ -113,7 +113,7 @@ function generateHtml (options, contentTree) {
 		}
 	}, options);
 
-	let env = process.env.ENV;
+	let env = process.env.ENV || '';
 
 	let config = require(process.cwd() + '/config.json');
 	if (env) {
