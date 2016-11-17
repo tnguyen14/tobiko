@@ -47,7 +47,7 @@ function getEndpoint (endpoint, apiRoot) {
 
 function getWordPressContent (contentTree, options) {
 	// if no options, quit early
-	if (!Object.keys(options)) {
+	if (!Object.keys(options).length) {
 		return Promise.resolve(contentTree);
 	}
 	return Promise.all(options.contents.map(function (endpoint) {
