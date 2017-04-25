@@ -1,4 +1,4 @@
-const test = require('tape');
+const tap = require('tap');
 const archive = require('../plugins/archive');
 
 var archivePosts = {
@@ -28,8 +28,7 @@ var archiveOption = {
 	orderby: 'order'
 };
 
-test('Get and sort posts for archive', function (t) {
-	t.plan(1);
+tap.test('Get and sort posts for archive', function (t) {
 	var posts = archive.getPosts(archivePosts, archiveOption.orderby);
 	t.deepEqual(posts, [{
 		order: 1,
@@ -41,10 +40,10 @@ test('Get and sort posts for archive', function (t) {
 		order: 3,
 		template: 'post.hbs'
 	}], 'Get and sort posts for archive');
+	t.end();
 });
 
-test('Generate archive pages', function (t) {
-	t.plan(1);
+tap.test('Generate archive pages', function (t) {
 	var archivePages = archive.paginate(archivePosts, 'posts', archiveOption);
 	t.deepEqual(archivePages, {
 		index: {
@@ -94,4 +93,5 @@ test('Generate archive pages', function (t) {
 			}
 		}
 	}, 'Generate archive pages');
+	t.end();
 });
