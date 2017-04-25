@@ -1,7 +1,8 @@
 # tobiko
 
-[![Build Status](https://secure.travis-ci.org/tnguyen14/tobiko.png?branch=master)](https://travis-ci.org/tnguyen14/tobiko)
 [![NPM](https://nodei.co/npm/tobiko.png)](https://nodei.co/npm/tobiko/)
+[![Build Status](https://secure.travis-ci.org/tnguyen14/tobiko.png?branch=master)](https://travis-ci.org/tnguyen14/tobiko)
+[![Coverage Status](https://coveralls.io/repos/github/tnguyen14/tobiko/badge.svg?branch=master)](https://coveralls.io/github/tnguyen14/tobiko?branch=master)
 
 > a JavaScript static site generator with support for WordPress
 
