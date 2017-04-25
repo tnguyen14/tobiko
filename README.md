@@ -1,6 +1,6 @@
 # tobiko
 
-[![NPM](https://img.shields.io/tobiko/v/npm.svg)](https://npmjs.com/package/tobiko)
+[![NPM](https://img.shields.io/npm/v/tobiko.svg)](https://npmjs.com/package/tobiko)
 [![Build Status](https://secure.travis-ci.org/tnguyen14/tobiko.png?branch=master)](https://travis-ci.org/tnguyen14/tobiko)
 [![Coverage Status](https://coveralls.io/repos/github/tnguyen14/tobiko/badge.svg?branch=master)](https://coveralls.io/github/tnguyen14/tobiko?branch=master)
 
