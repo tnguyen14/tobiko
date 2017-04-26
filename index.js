@@ -34,6 +34,16 @@ module.exports = function (options) {
 	}), copyImages(opts)]);
 };
 
+// only expose certain functions in closure for testing purposes
+module.exports._testExports = function () {
+	// if it is test
+	if (process.argv[1].match(/test\/.*\.js/)) {
+		return {
+			importContents
+		};
+	}
+}
+
 function copyImages (opts) {
 	return new Promise((resolve, reject) => {
 		// copy images
