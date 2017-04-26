@@ -78,6 +78,9 @@ function processFile (filepath, opts, contentTree) {
 	let pathWithoutContentsDir = path.relative(opts.contentsDir, filepath);
 	let directories = path.dirname(pathWithoutContentsDir).split(path.sep);
 	let file = parse(filepath, opts.markdown);
+	if (!file) {
+		return;
+	}
 
 	if (!file.date) {
 		file.date = fs.statSync(filepath).ctime;
