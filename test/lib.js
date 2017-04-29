@@ -9,7 +9,7 @@ let fixtures = {
 	json: 'test/fixtures/foo.json',
 	md: 'test/fixtures/baz.md',
 	draftUnderscore: 'test/fixtures/_draft.json',
-	draftDot: 'test/fixtures/.draft.md'
+	draftDot: 'test/fixtures/.dsraft.md'
 };
 
 tap.test('should parse JSON file', function (t) {
@@ -63,3 +63,27 @@ tap.test('should import contents for test fixtures', function (t) {
 		t.end();
 	});
 });
+
+tap.test('should import contents and reverse order', function (t) {
+	tobiko.importContents({
+		contentsDir: fixtures._,
+		plugins: {
+			archives: {},
+			wordpress: {},
+			transform: function (contentTree) {
+				// reverse the order of the contents of a folder
+				let reversedOrdered = {};
+				Object.keys(contentTree.nested.ordered).reverse().forEach(function (key) {
+					reversedOrdered[key] = contentTree.nested.ordered[key];
+				});
+				contentTree.nested.ordered = reversedOrdered;
+				return Promise.resolve(contentTree);
+			}
+		}
+	}).then(function (contentTree) {
+		t.deepEqual(Object.keys(contentTree.nested.ordered),
+			['3.cyndaquil', '2.totodile', '1.chikorita']
+		);
+		t.end();
+	});
+})

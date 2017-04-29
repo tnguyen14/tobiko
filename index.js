@@ -11,7 +11,14 @@ const cpFile = require('cp-file');
 // register plugins
 const plugins = {
 	wordpress: require('./plugins/wordpress'),
-	archive: require('./plugins/archive')
+	archive: require('./plugins/archive'),
+	transform: function (contentTree, fn) {
+		if (typeof fn === 'function') {
+			return fn(contentTree);
+		}
+		// pass through by default
+		return Promise.resolve(contentTree);
+	}
 };
 
 module.exports = function (options) {

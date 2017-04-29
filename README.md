@@ -33,6 +33,10 @@ tobiko({
 				title: 'Articles',
 				template: 'articles.hbs'
 			}
+		},
+		transform: function (contentTree) {
+			// do something with the content object
+			return Promise.resolve(contentTree)
 		}
 	}
 });
@@ -206,7 +210,7 @@ Each template will be passed in a context object generated from the content file
 - Other sub-directories included in the same directory is accessible in the template with [nesting](#nesting).
 
 ### Plugins
-Tobiko can be extended with plugins. By default, it comes with 2 plugins:
+Tobiko can be extended with plugins. By default, it comes with 3 plugins:
 
 #### WordPress
 While static site can be a great way to publish content, managing them using the file system can feel clunky at times. It is not too friendly for non-developers. As such, tobiko allows you to pull in content from WordPress, one of the most popular content management systems. With [WP REST API](http://v2.wp-api.org/), content from WordPress can be exported to a system like tobiko.
@@ -250,6 +254,11 @@ Each value can have the following options:
 The paginated content in each archive page is accessible in the template file under `content.posts`.
 
 *The `archives` plugin can be used in combination with the `wordpress` plugin to paginate WordPress content.*
+
+#### Transform
+The `transform` plugin allows you to perform any type of modification/ transformation of the content tree.
+
+In order to do so, instead of passing in a JS object like the other plugins for options, `transform` takes a function that accepts the `contentTree` object as an argument, and returns a promise that will resolve with a value that is the new `contentTree`.
 
 ### Deployment
 The site can be deployed to [Github Pages](http://pages.github.com) or any static site hosting solutions.
