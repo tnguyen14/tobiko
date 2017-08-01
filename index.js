@@ -183,7 +183,7 @@ function generateHtml (options, contentTree) {
 			context.config = config;
 
 			// make all data available as context's "global"
-			context.global = contents;
+			context.global = contentTree;
 
 			let html = templates[file.template](context);
 
