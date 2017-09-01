@@ -17,6 +17,7 @@ const argv = require('yargs')
 		describe: 'watch mode'
 	})
 	.help().alias('help', 'h')
+	.version().alias('version', 'v')
 	.argv;
 
 const options = config(argv.file, {
