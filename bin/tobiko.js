@@ -35,7 +35,7 @@ function doImportContents () {
 	if (importingContents) {
 		console.log('Importing in process. Wait...');
 		contentTimeout = setTimeout(doImportContents, 1000);
-		return;
+		return Promise.resolve();
 	}
 	importingContents = true;
 	return importContents(options).then(contents => {
@@ -68,6 +68,10 @@ function doGenerateHtml () {
 }
 
 if (argv.watch) {
-	chokidar.watch(options.contentsDir).on('all', doImportContents);
-	chokidar.watch(options.handlebars.templatesDir).on('all', doGenerateHtml);
+	chokidar.watch(options.contentsDir)
+		.on('add', doImportContents)
+		.on('change', doImportContents);
+	chokidar.watch(options.handlebars.templatesDir)
+		.on('add', doGenerateHtml)
+		.on('change', doGenerateHtml);
 }
