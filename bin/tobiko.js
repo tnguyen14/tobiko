@@ -70,9 +70,7 @@ function doGenerateHtml () {
 
 if (argv.watch) {
 	chokidar.watch(options.contentsDir)
-		.on('add', doImportContents)
 		.on('change', doImportContents);
 	chokidar.watch(options.handlebars.templatesDir)
-		.on('add', doGenerateHtml)
 		.on('change', doGenerateHtml);
 }
