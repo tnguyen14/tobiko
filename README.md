@@ -7,10 +7,31 @@
 > a JavaScript static site generator with support for WordPress
 
 ## Usage
+### CLI
+```shell
+$ tobiko
+$ tobiko -h
+
+Options:
+  --file, -f     path to config file                    [default: "tobiko.json"]
+  --watch, -w    watch mode
+  --help, -h     Show help                                             [boolean]
+  --version, -v  Show version number                                   [boolean]
+```
+
+### API
 ```
 const tobiko = require('tobiko');
+const conf = require('./tobiko.js');
+tobiko(conf);
+```
 
-tobiko({
+### Config file
+By default, the CLI `tobiko` will look for `tobiko.json`. If dynamic options are needed, they can be declared in a JavaScript file:
+
+```js
+// tobiko.js
+module.exports = {
 	contentsDir: 'contents',
 	outDir: 'dist',
 	handlebars: {
@@ -39,8 +60,13 @@ tobiko({
 			return Promise.resolve(contentTree)
 		}
 	}
-});
+};
 ```
+
+```shell
+$ tobiko -f tobiko.js
+```
+
 ## What's supported
 - Content: JSON / Markdown (optionally with YAML frontmatter) / WordPress (through WP REST API)
 - Template: Handlebars
