@@ -1,7 +1,7 @@
 const tap = require('tap');
 const moment = require('moment');
-const parse = require('../lib/parse');
-const decorate = require('../lib/decorate');
+const parse = require('../lib/content/parse');
+const decorate = require('../lib/content/decorate');
 const importContents = require('../lib/importContents');
 
 let fixtures = {
@@ -56,6 +56,28 @@ tap.test('should import contents for test fixtures', function (t) {
 	}, function (err) {
 		console.error(err);
 		t.notOk(err, 'no error when importing contents');
+		t.end();
+	});
+});
+
+tap.test('should import contents and reverse order', function (t) {
+	importContents({
+		contentsDir: fixtures._,
+		plugins: {
+			transform: function (contentTree) {
+				// reverse the order of the contents of a folder
+				let reversedOrdered = {};
+				Object.keys(contentTree.nested.ordered).reverse().forEach(function (key) {
+					reversedOrdered[key] = contentTree.nested.ordered[key];
+				});
+				contentTree.nested.ordered = reversedOrdered;
+				return Promise.resolve(contentTree);
+			}
+		}
+	}).then(function (contentTree) {
+		t.deepEqual(Object.keys(contentTree.nested.ordered),
+			['3.cyndaquil', '2.totodile', '1.chikorita']
+		);
 		t.end();
 	});
 });
