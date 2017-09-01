@@ -28,40 +28,50 @@ let contentTree, importingContents, generatingHtml, contentTimeout, htmlTimeout;
 
 tobiko(options);
 
-function doImportContents () {
+function doImportContents (path) {
+	if (path) {
+		process.stdout.write(`${path} has changed. `);
+	}
 	if (contentTimeout) {
 		clearTimeout(contentTimeout);
 		contentTimeout = undefined;
 	}
 	if (importingContents) {
-		console.log('Importing in process. Wait...');
+		console.log('Content updating already in process. Wait...');
 		contentTimeout = setTimeout(doImportContents, 1000);
 		return Promise.resolve();
 	}
 	importingContents = true;
+	console.log('Updating content...');
 	return importContents(options).then(contents => {
 		contentTree = contents;
 		importingContents = false;
 		contentTimeout = undefined;
+		console.log('Content updated.');
 	});
 }
 
-function doGenerateHtml () {
+function doGenerateHtml (path) {
+	if (path) {
+		process.stdout.write(`${path} has changed. `);
+	}
 	if (htmlTimeout) {
 		clearTimeout(htmlTimeout);
 		htmlTimeout = undefined;
 	}
 	if (generatingHtml) {
-		console.log('Generating in process. Wait...');
+		console.log('HTML generating is already in process. Wait...');
 		htmlTimeout = setTimeout(doGenerateHtml, 1000);
 		return;
 	}
 	// use the "cached" contentTree to avoid re-importing contents
 	if (contentTree) {
 		generatingHtml = true;
+		console.log('Generating new HTML...');
 		generateHtml(options, contentTree).then(() => {
 			generatingHtml = false;
 			htmlTimeout = undefined;
+			console.log('HTML generated.');
 		});
 	} else {
 		doImportContents().then(doGenerateHtml);
