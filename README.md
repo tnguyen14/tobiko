@@ -20,7 +20,7 @@ Options:
 ```
 
 ### API
-```
+```js
 const tobiko = require('tobiko');
 const conf = require('./tobiko.js');
 tobiko(conf);
