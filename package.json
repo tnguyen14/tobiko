@@ -7,6 +7,7 @@
     "url": "https://github.com/tnguyen14"
   },
   "main": "index.js",
+  "bin": "bin/tobiko.js",
   "description": "static site generator",
   "keywords": [
     "static site generator",
@@ -15,6 +16,7 @@
   "repository": "tnguyen14/tobiko",
   "license": "ISC",
   "dependencies": {
+    "@tridnguyen/config": "^2.3.1",
     "cp-file": "^4.1.0",
     "front-matter": "^2.1.2",
     "glob": "^7.1.1",
@@ -23,7 +25,8 @@
     "marked": "^0.3.2",
     "mkdirp": "^0.5.1",
     "moment": "^2.8.3",
-    "node-fetch": "^1.6.3"
+    "node-fetch": "^1.6.3",
+    "yargs": "^8.0.2"
   },
   "devDependencies": {
     "debug": "^2.2.0",
