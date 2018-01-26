@@ -21,7 +21,11 @@ tap.test('should parse JSON file', function (t) {
 tap.test('should parse markdown file', function (t) {
 	var baz = parse(fixtures.md);
 	t.equal(baz.title, 'Baz', 'File content');
-	t.equal(baz.main, '<p>This is an example paragraph.</p>\n', 'File content markdown');
+	t.equal(
+		baz.main,
+		'<p>This is an example paragraph.</p>\n',
+		'File content markdown'
+	);
 	t.end();
 });
 
@@ -45,39 +49,57 @@ tap.test('should decorate file with properties', function (t) {
 
 tap.test('should import contents for test fixtures', function (t) {
 	importContents({
-		contentsDir: fixtures._
-	}).then(function (contentTree) {
-		t.deepEqual(Object.keys(contentTree.nested.ordered),
-			['1.chikorita', '2.totodile', '3.cyndaquil']);
-		t.deepEqual(Object.keys(contentTree.nested.unordered),
-			['chikorita', 'cyndaquil', 'totodile']
-		);
-		t.end();
-	}, function (err) {
-		console.error(err);
-		t.notOk(err, 'no error when importing contents');
-		t.end();
-	});
+		plugins: {
+			files: {
+				contentsDir: fixtures._
+			}
+		}
+	}).then(
+		function (contentTree) {
+			t.deepEqual(Object.keys(contentTree.nested.ordered), [
+				'1.chikorita',
+				'2.totodile',
+				'3.cyndaquil'
+			]);
+			t.deepEqual(Object.keys(contentTree.nested.unordered), [
+				'chikorita',
+				'cyndaquil',
+				'totodile'
+			]);
+			t.end();
+		},
+		function (err) {
+			console.error(err);
+			t.notOk(err, 'no error when importing contents');
+			t.end();
+		}
+	);
 });
 
 tap.test('should import contents and reverse order', function (t) {
 	importContents({
-		contentsDir: fixtures._,
 		plugins: {
+			files: {
+				contentsDir: fixtures._
+			},
 			transform: function (contentTree) {
 				// reverse the order of the contents of a folder
 				let reversedOrdered = {};
-				Object.keys(contentTree.nested.ordered).reverse().forEach(function (key) {
-					reversedOrdered[key] = contentTree.nested.ordered[key];
-				});
+				Object.keys(contentTree.nested.ordered)
+					.reverse()
+					.forEach(function (key) {
+						reversedOrdered[key] = contentTree.nested.ordered[key];
+					});
 				contentTree.nested.ordered = reversedOrdered;
 				return Promise.resolve(contentTree);
 			}
 		}
 	}).then(function (contentTree) {
-		t.deepEqual(Object.keys(contentTree.nested.ordered),
-			['3.cyndaquil', '2.totodile', '1.chikorita']
-		);
+		t.deepEqual(Object.keys(contentTree.nested.ordered), [
+			'3.cyndaquil',
+			'2.totodile',
+			'1.chikorita'
+		]);
 		t.end();
 	});
 });

@@ -72,7 +72,7 @@ function paginate (dir, dirName, options) {
 	// set up each archive page
 	for (var pageNum = 1; pageNum <= numPages; pageNum++) {
 		archive[pageNum] = {};
-		var archivePage = archive[pageNum].index = {};
+		var archivePage = (archive[pageNum].index = {});
 		// add template so it gets rendered
 		archivePage.template = options.template;
 		// a title as well
