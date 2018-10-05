@@ -20,7 +20,7 @@
     "chokidar": "^2.0.4",
     "cp-file": "^6.0.0",
     "debug": "^3.1.0",
-    "front-matter": "^2.3.0",
+    "front-matter": "^3.0.0",
     "glob": "^7.1.1",
     "handlebars": "^4.0.8",
     "lodash": "^4.17.4",
