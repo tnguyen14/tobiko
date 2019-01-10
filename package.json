@@ -19,7 +19,7 @@
     "@tridnguyen/config": "^2.3.1",
     "chokidar": "^2.0.4",
     "cp-file": "^6.0.0",
-    "debug": "^3.1.0",
+    "debug": "^4.1.1",
     "front-matter": "^2.3.0",
     "glob": "^7.1.1",
     "handlebars": "^4.0.8",
