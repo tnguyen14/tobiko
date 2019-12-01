@@ -29,7 +29,7 @@ tobiko(conf);
 ```
 
 ### Config file
-By default, the CLI `tobiko` will look for `tobiko.json`. If dynamic options are needed, they can be declared in a JavaScript file:
+By default, the CLI `tobiko` will look for `tobiko.js`. If dynamic options are needed, they can be declared in a JavaScript file:
 
 ```js
 // tobiko.js

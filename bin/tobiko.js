@@ -9,7 +9,7 @@ const argv = require('yargs')
 	.usage('Run tobiko and generate static files!\n\nUsage: $0 [options]')
 	.option('file', {
 		alias: 'f',
-		default: 'tobiko.json',
+		default: 'tobiko.js',
 		describe: 'path to config file'
 	})
 	.option('watch', {
