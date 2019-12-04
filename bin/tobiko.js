@@ -5,6 +5,7 @@ const config = require('@tridnguyen/config');
 const chokidar = require('chokidar');
 const importContents = require('../lib/importContents');
 const generateHtml = require('../lib/generateHtml');
+const defaultOptions = require('../lib/defaultOptions');
 const argv = require('yargs')
 	.usage('Run tobiko and generate static files!\n\nUsage: $0 [options]')
 	.option('file', {
@@ -20,7 +21,7 @@ const argv = require('yargs')
 	.version().alias('version', 'v')
 	.argv;
 
-const options = config(argv.file, {
+const options = config(defaultOptions, argv.file, {
 	caller: false
 });
 

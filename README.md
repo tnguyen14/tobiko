@@ -87,6 +87,7 @@ $ tobiko -f tobiko.js
 	- `helpersDir`: location of template helpers. Defaults to `templates/helpers`.
 - `plugins`: configuration for plugins. See [plugins](#plugins) for more info.
 
+For all the default options, see `lib/defaultOptions.js`.
 ### Contents
 By default, the site content will be in the `contents` folder. This option could be changed in `tobiko.json`, under `contentDir` property.
 

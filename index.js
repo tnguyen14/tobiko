@@ -1,17 +1,10 @@
 const generateHtml = require('./lib/generateHtml');
 const importContents = require('./lib/importContents');
 const copyImages = require('./lib/copyImages');
+const defaultOptions = require('./lib/defaultOptions');
 
 module.exports = function (options) {
-	let opts = Object.assign({}, {
-		contentsDir: 'contents',
-		outDir: 'dist',
-		markdown: {
-			breaks: true,
-			smartLists: true,
-			smartypants: true
-		}
-	}, options);
+	let opts = Object.assign({}, defaultOptions, options);
 
 	return Promise.all([
 		importContents(opts)
