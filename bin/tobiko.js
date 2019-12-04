@@ -27,7 +27,9 @@ const options = config(defaultOptions, argv.file, {
 
 let contentTree, importingContents, generatingHtml, contentTimeout, htmlTimeout;
 
-tobiko(options);
+tobiko(options).then(null, err => {
+	console.error(err);
+});
 
 function doImportContents (path) {
 	if (path) {
@@ -49,12 +51,16 @@ function doImportContents (path) {
 		importingContents = false;
 		contentTimeout = undefined;
 		console.log('Content updated.');
+	}, (err) => {
+		importContents = false;
+		contentTree = undefined;
+		console.error(err);
 	});
 }
 
 function doGenerateHtml (path) {
 	if (path) {
-		process.stdout.write(`${path} has changed. `);
+		console.log(`"${path}" has changed.`);
 	}
 	if (htmlTimeout) {
 		clearTimeout(htmlTimeout);
@@ -73,6 +79,11 @@ function doGenerateHtml (path) {
 			generatingHtml = false;
 			htmlTimeout = undefined;
 			console.log('HTML generated.');
+		}, (err) => {
+			console.log('an error has occurred');
+			generatingHtml = false;
+			htmlTimeout = undefined;
+			console.error(err);
 		});
 	} else {
 		doImportContents().then(doGenerateHtml);
