@@ -52,7 +52,7 @@ function doImportContents (path) {
 		contentTimeout = undefined;
 		console.log('Content updated.');
 	}, (err) => {
-		importContents = false;
+		importingContents = false;
 		contentTree = undefined;
 		console.error(err);
 	});
