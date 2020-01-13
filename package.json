@@ -22,7 +22,7 @@
     "debug": "^4.1.1",
     "front-matter": "^3.0.1",
     "glob": "^7.1.1",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.2",
     "lodash": "^4.17.15",
     "marked": "^0.7.0",
     "mkdirp": "^0.5.1",
