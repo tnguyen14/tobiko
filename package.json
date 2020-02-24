@@ -18,7 +18,7 @@
   "dependencies": {
     "@tridnguyen/config": "^2.3.1",
     "chokidar": "^3.3.0",
-    "cp-file": "^6.0.0",
+    "cp-file": "^8.0.1",
     "debug": "^4.1.1",
     "front-matter": "^3.0.1",
     "glob": "^7.1.1",
