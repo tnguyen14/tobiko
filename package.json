@@ -24,20 +24,14 @@
     "glob": "^7.1.1",
     "handlebars": "^4.5.3",
     "lodash": "^4.17.15",
-    "marked": "^0.7.0",
+    "marked": "^4.0.12",
     "mkdirp": "^0.5.1",
     "moment": "^2.20.1",
     "node-fetch": "^2.3.0",
     "yargs": "^15.0.2"
   },
   "devDependencies": {
-    "eslint": "^5.0.0",
-    "eslint-config-happiness": "^10.2.1",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-node": "^8.0.0",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "tap": "^14.10.2"
+    "tap": "^16.0.1"
   },
   "scripts": {
     "test": "tap test/*.js --cov"
